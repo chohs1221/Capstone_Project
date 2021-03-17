@@ -1,7 +1,7 @@
 from opencv_header import *
 
 if __name__ == "__main__":
-    src = cv2.imread("12.png", cv2.IMREAD_COLOR)
+    src = cv2.imread("./images/1.jpg", cv2.IMREAD_COLOR)
     src = cv2.resize(src, dsize=(640, 480), interpolation=cv2.INTER_AREA)
     height, width, channel = src.shape
     cv2.imshow("src", src)

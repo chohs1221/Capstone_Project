@@ -2,17 +2,19 @@ import sys
 import time
 import threading
 
+import cv2
 from opencv_header import *
-import resource_rc
 
 from collections import deque
 import serial
-import cv2
+
 from playsound import playsound
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5 import uic
 from PyQt5.QtGui import *
+import resource_rc
 
 
 def audio(num):
@@ -283,7 +285,7 @@ def pyqt5():
         def f_timeout(self):
             global data
             try:
-                img = QPixmap("img{}.png".format(data))
+                img = QPixmap("./images/img{}.png".format(data))
                 img = img.scaled(1020,550)
                 self.q_lb_img.setPixmap(QPixmap(img))
             except:
@@ -405,11 +407,11 @@ def pyqt5():
             global daily
 
             if empty == 0:
-                img = QPixmap("1111.png")
+                img = QPixmap("./images/empty_green.png")
                 img = img.scaled(330,200)
                 self.q_lb_level.setPixmap(QPixmap(img))
             elif empty == 1:
-                img = QPixmap("2222.png")
+                img = QPixmap("./images/empty_red.png")
                 img = img.scaled(330,200)
                 self.q_lb_level.setPixmap(QPixmap(img))
 
@@ -420,7 +422,7 @@ def pyqt5():
         def __init__(self) :
             super().__init__()
             self.setupUi(self)
-            img = QPixmap("imgstop.png")
+            img = QPixmap("./images/imgstop.png")
             img = img.scaled(1000, 460)
             self.q_lb_stop.setPixmap(QPixmap(img))
             # self.setWindowTitle('Stop')
@@ -476,9 +478,7 @@ if __name__ == "__main__" :
     # win_home.show()
     p1 = threading.Thread(target=opencv4)
     p1.start()
-    # p1.join()
-    # p2 = threading.Thread(target=pyqt5)
-    # p2.start()
-    # p2.join()
+    p2 = threading.Thread(target=pyqt5)
+    p2.start()
     p3 = threading.Thread(target=serial_run)
     p3.start()
