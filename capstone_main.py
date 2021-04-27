@@ -6,7 +6,12 @@ from pyqt5_result import *
 from img_test1 import *
 from img_test2 import *
  
-#ser = serial.Serial('/dev/ttyACM0', 9600)
+def serial_():
+    ser = serial.Serial('/dev/ttyACM0', 9600)
+    while True:
+        
+        ser.write(op.encode())
+
 def onChange(pos):
     pass
 
