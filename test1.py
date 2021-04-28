@@ -7,6 +7,7 @@ from PyQt5 import uic
 from multiprocessing import Process
 import threading
 from opencv_header import *
+import resource_rc
 
 def serial_():
     ser = serial.Serial('/dev/ttyACM0', 9600)

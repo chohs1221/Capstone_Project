@@ -1,27 +1,29 @@
 import cv2
 import time
 import serial
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5 import uic
 from multiprocessing import Process
 import threading
-from pyqt5_result import *
-from img_test1 import *
-from img_test2 import *
- 
+from opencv_header import *
+import resource_rc
+#https://brownbears.tistory.com/217
 def serial_():
     ser = serial.Serial('/dev/ttyACM0', 9600)
     while(1):
         code = 100
-    if code=='q':
-        break
-    else:
-        code = code.encode('utf-8')
-        ser.write(code)
+        if code=='q':
+            break
+        else:
+            code = code.encode('utf-8')
+            ser.write(code)
 
 def onChange(pos):
     pass
 
 def opencv4():
-    capture = cv2.VideoCapture(0)
+    capture = cv2.VideoCapture(1)
     capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
@@ -64,7 +66,7 @@ def opencv4():
         img_masked = mask(frame, low, high)
         cv2.imshow("img_masked", img_masked)
 
-        img_blur = Bluring(img_masked, blur)
+        img_blur = Blurring(img_masked, blur)
         cv2.imshow('img_blur', img_blur)
 
         img_binary = Grayscale(img_blur, g_scale)
@@ -73,10 +75,7 @@ def opencv4():
         contours, img_contour = draw_Contours(img_binary, height, width, channel)
         cv2.imshow('contours', img_contour)
 
-        img_contourBox = draw_ContourBox(img_contour, contours, 300, 3, height, width, channel, frame)
-        cv2.putText(img_contourBox, "h: ("+str(low[0])+", "+str(high[0])+")", (10, 10), cv2.FONT_HERSHEY_DUPLEX, 0.5, (0, 0, 255), 1)
-        cv2.putText(img_contourBox, "s: ("+str(low[1])+", "+str(high[1])+")", (10, 25), cv2.FONT_HERSHEY_DUPLEX, 0.5, (0, 0, 255), 1)
-        cv2.putText(img_contourBox, "v: ("+str(low[2])+", "+str(high[2])+")", (10, 40), cv2.FONT_HERSHEY_DUPLEX, 0.5, (0, 0, 255), 1)
+        img_contourBox = draw_ContourBox(contours, 300, 3, frame)
         cv2.imshow('img_contourBox', img_contourBox)
 
         if cv2.waitKey(33) == ord('r'):
@@ -92,27 +91,192 @@ def opencv4():
     capture.release()
     cv2.destroyAllWindows()
 
-#def pyqt5():
-# ui_home = uic.loadUiType("home.ui")[0]
-# ui_start = uic.loadUiType("start.ui")[0]
-# ui_master = uic.loadUiType("mastermode.ui")[0]
-# ui_status = uic.loadUiType("status.ui")[0]
-# ui_stop = uic.loadUiType("stop.ui")[0]
+#UI파일 연결
+#단, UI파일은 Python 코드 파일과 같은 디렉토리에 위치해야한다.
+ui_home = uic.loadUiType("home.ui")[0]
+ui_start = uic.loadUiType("start.ui")[0]
+ui_master = uic.loadUiType("mastermode.ui")[0]
+ui_status = uic.loadUiType("status.ui")[0]
+ui_stop = uic.loadUiType("stop.ui")[0]
 
-app = QApplication(sys.argv)
-win_home = Window_Home()
-win_start = Window_Start()
-win_master = Window_Master()
-win_status = Window_Status()
-win_stop = Window_Stop()
-win_home.show()
-app.exec_()
+#화면을 띄우는데 사용되는 Class 선언
+class Window_Home(QMainWindow, ui_home) :
+    def __init__(self) :
+        super().__init__()
+        self.setupUi(self)
+        self.setWindowTitle('Home')
 
-if __name__ == '__main__':
- 
-    p1 = threading.Thread(target=opencv4)
-    #p2 = Process(target=pyqt5)
+        # 창 위치
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+        
+        # 버튼 이벤트 설정
+        self.q_btn_start.clicked.connect(self.f_btn_start)
+        self.q_btn_mastermode.clicked.connect(self.f_btn_mastermode)
+        self.q_btn_status.clicked.connect(self.f_btn_status)
+        self.q_btn_stop.clicked.connect(self.f_btn_stop)
+    
+    
+    def f_btn_start(self) :
+        print("Start Mode ")
+        self.close()
+        win_start.show()
+
+    def f_btn_mastermode(self) :
+        print("Mater Mode ")
+        self.close()
+        win_master.show()
+
+    def f_btn_status(self) :
+        print("Status Mode ")
+        self.close()
+        win_status.show()
+    
+    def f_btn_stop(self) :
+        print("Stop Mode ")
+        self.close()
+        win_stop.show()
+
+class Window_Start(QMainWindow, ui_start) :
+    def __init__(self) :
+        super().__init__()
+        self.setupUi(self)
+        self.setWindowTitle('Start')
+
+        # 창 위치
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
+        # 버튼 이벤트 설정
+        self.q_btn_home.clicked.connect(self.f_btn_home)
+        self.q_btn_stop.clicked.connect(self.f_btn_stop)
+    
+    def f_btn_home(self) :
+        print("home")
+        self.close()
+        win_home.show()
+    
+    def f_btn_stop(self) :
+        print("Stop Mode ")
+        self.close()
+        win_stop.show()
+
+class Window_Master(QMainWindow, ui_master) :
+    def __init__(self) :
+        super().__init__()
+        self.setupUi(self)
+        self.setWindowTitle('Master')
+
+        # 창 위치
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
+        # 버튼 이벤트 설정
+        self.q_btn_home.clicked.connect(self.f_btn_home)
+        self.q_btn_stop.clicked.connect(self.f_btn_stop)
+
+        self.q_rad_large.clicked.connect(self.f_gBox_size)
+        self.q_rad_midium.clicked.connect(self.f_gBox_size)
+        self.q_rad_small.clicked.connect(self.f_gBox_size)
+
+        self.q_chkb_washonly.stateChanged.connect(self.f_chkb_washonly)
+        self.q_rad_Level1.clicked.connect(self.f_gBox_pressure)
+        self.q_rad_Level2.clicked.connect(self.f_gBox_pressure)
+        self.q_rad_Level3.clicked.connect(self.f_gBox_pressure)
+    
+    def f_btn_home(self) :
+        print("home")
+        self.close()
+        win_home.show()
+
+    def f_gBox_size(self) :
+        if self.q_rad_large.isChecked() : print("Large Size")
+        elif self.q_rad_midium.isChecked() : print("Midium Size")
+        elif self.q_rad_small.isChecked() : print("Small Size")
+    
+    def f_chkb_washonly(self) :
+        if self.q_chkb_washonly.isChecked() :
+            print("Wash Only")
+        else :
+            print("Wash and Clean")
+    
+    def f_gBox_pressure(self) :
+        if self.q_rad_Level1.isChecked() : print("level 1")
+        elif self.q_rad_Level2.isChecked() : print("level 2")
+        elif self.q_rad_Level3.isChecked() : print("level 3")
+    
+    def f_btn_stop(self) :
+        print("Stop Mode ")
+        self.close()
+        win_stop.show()
+
+class Window_Status(QMainWindow, ui_status) :
+    def __init__(self) :
+        super().__init__()
+        self.setupUi(self)
+        self.setWindowTitle('Status')
+
+        # 창 위치
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
+        # 버튼 이벤트 설정
+        self.q_btn_home.clicked.connect(self.f_btn_home)
+        self.q_btn_stop.clicked.connect(self.f_btn_stop)
+    
+    def f_btn_home(self) :
+        print("home")
+        self.close()
+        win_home.show()
+    
+    def f_btn_stop(self) :
+        print("Stop Mode ")
+        self.close()
+        win_stop.show()
+
+class Window_Stop(QMainWindow, ui_stop) :
+    def __init__(self) :
+        super().__init__()
+        self.setupUi(self)
+        self.setWindowTitle('Stop')
+
+        # 창 위치
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
+        # 버튼 이벤트 설정
+        self.q_btn_home.clicked.connect(self.f_btn_home)
+    
+    def f_btn_home(self) :
+        print("home")
+        self.close()
+        win_home.show()
+    
+    def f_btn_stop(self) :
+        print("Stop Mode ")
+        self.close()
+        win_stop.show()
+
+
+if __name__ == "__main__" :
+    app = QApplication(sys.argv)
+    cnt = 0
+    win_home = Window_Home()
+    win_start = Window_Start()
+    win_master = Window_Master()
+    win_status = Window_Status()
+    win_stop = Window_Stop()
+    win_home.show()
+    p1 = Process(target=opencv4)
     p1.start()
-    #p2.start()
-    #p1.join()
-    #p2.join()
+    app.exec_()
