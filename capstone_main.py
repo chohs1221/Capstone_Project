@@ -2,15 +2,20 @@ import cv2
 import time
 import serial
 from multiprocessing import Process
+import threading
 from pyqt5_result import *
 from img_test1 import *
 from img_test2 import *
  
 def serial_():
     ser = serial.Serial('/dev/ttyACM0', 9600)
-    while True:
-        
-        ser.write(op.encode())
+    while(1):
+        code = 100
+    if code=='q':
+        break
+    else:
+        code = code.encode('utf-8')
+        ser.write(code)
 
 def onChange(pos):
     pass
@@ -87,21 +92,27 @@ def opencv4():
     capture.release()
     cv2.destroyAllWindows()
 
-def pyqt5():
-    app = QApplication(sys.argv)
-    win_home = Window_Home()
-    win_start = Window_Start()
-    win_master = Window_Master()
-    win_status = Window_Status()
-    win_stop = Window_Stop()
-    win_home.show()
-    app.exec_()
+#def pyqt5():
+# ui_home = uic.loadUiType("home.ui")[0]
+# ui_start = uic.loadUiType("start.ui")[0]
+# ui_master = uic.loadUiType("mastermode.ui")[0]
+# ui_status = uic.loadUiType("status.ui")[0]
+# ui_stop = uic.loadUiType("stop.ui")[0]
+
+app = QApplication(sys.argv)
+win_home = Window_Home()
+win_start = Window_Start()
+win_master = Window_Master()
+win_status = Window_Status()
+win_stop = Window_Stop()
+win_home.show()
+app.exec_()
 
 if __name__ == '__main__':
  
-    p1 = Process(target=opencv4)
-    p2 = Process(target=pyqt5)
+    p1 = threading.Thread(target=opencv4)
+    #p2 = Process(target=pyqt5)
     p1.start()
-    p2.start()
-    p1.join()
-    p2.join()
+    #p2.start()
+    #p1.join()
+    #p2.join()
