@@ -6,8 +6,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic
 from multiprocessing import Process
 import threading
-from img_test1 import *
-from img_test2 import *
+from opencv_header import *
 
 def serial_():
     ser = serial.Serial('/dev/ttyACM0', 9600)
@@ -23,7 +22,7 @@ def onChange(pos):
     pass
 
 def opencv4():
-    capture = cv2.VideoCapture(0)
+    capture = cv2.VideoCapture(1)
     capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
@@ -66,7 +65,7 @@ def opencv4():
         img_masked = mask(frame, low, high)
         cv2.imshow("img_masked", img_masked)
 
-        img_blur = Bluring(img_masked, blur)
+        img_blur = Blurring(img_masked, blur)
         cv2.imshow('img_blur', img_blur)
 
         img_binary = Grayscale(img_blur, g_scale)
@@ -75,10 +74,7 @@ def opencv4():
         contours, img_contour = draw_Contours(img_binary, height, width, channel)
         cv2.imshow('contours', img_contour)
 
-        img_contourBox = draw_ContourBox(img_contour, contours, 300, 3, height, width, channel, frame)
-        cv2.putText(img_contourBox, "h: ("+str(low[0])+", "+str(high[0])+")", (10, 10), cv2.FONT_HERSHEY_DUPLEX, 0.5, (0, 0, 255), 1)
-        cv2.putText(img_contourBox, "s: ("+str(low[1])+", "+str(high[1])+")", (10, 25), cv2.FONT_HERSHEY_DUPLEX, 0.5, (0, 0, 255), 1)
-        cv2.putText(img_contourBox, "v: ("+str(low[2])+", "+str(high[2])+")", (10, 40), cv2.FONT_HERSHEY_DUPLEX, 0.5, (0, 0, 255), 1)
+        img_contourBox = draw_ContourBox(contours, 300, 3, frame)
         cv2.imshow('img_contourBox', img_contourBox)
 
         if cv2.waitKey(33) == ord('r'):

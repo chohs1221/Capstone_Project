@@ -33,22 +33,22 @@ class Window_Home(QMainWindow, ui_home) :
     
     def f_btn_start(self) :
         print("Start Mode ")
-        self.close()
+        self.hide()
         win_start.show()
 
     def f_btn_mastermode(self) :
         print("Mater Mode ")
-        self.close()
+        self.hide()
         win_master.show()
 
     def f_btn_status(self) :
         print("Status Mode ")
-        self.close()
+        self.hide()
         win_status.show()
     
     def f_btn_stop(self) :
         print("Stop Mode ")
-        self.close()
+        self.hide()
         win_stop.show()
 
 class Window_Start(QMainWindow, ui_start) :
@@ -69,12 +69,12 @@ class Window_Start(QMainWindow, ui_start) :
     
     def f_btn_home(self) :
         print("home")
-        self.close()
+        self.hide()
         win_home.show()
     
     def f_btn_stop(self) :
         print("Stop Mode ")
-        self.close()
+        self.hide()
         win_stop.show()
 
 class Window_Master(QMainWindow, ui_master) :
@@ -104,7 +104,7 @@ class Window_Master(QMainWindow, ui_master) :
     
     def f_btn_home(self) :
         print("home")
-        self.close()
+        self.hide()
         win_home.show()
 
     def f_gBox_size(self) :
@@ -125,7 +125,7 @@ class Window_Master(QMainWindow, ui_master) :
     
     def f_btn_stop(self) :
         print("Stop Mode ")
-        self.close()
+        self.hide()
         win_stop.show()
 
 class Window_Status(QMainWindow, ui_status) :
@@ -146,12 +146,12 @@ class Window_Status(QMainWindow, ui_status) :
     
     def f_btn_home(self) :
         print("home")
-        self.close()
+        self.hide()
         win_home.show()
     
     def f_btn_stop(self) :
         print("Stop Mode ")
-        self.close()
+        self.hide()
         win_stop.show()
 
 class Window_Stop(QMainWindow, ui_stop) :
@@ -171,18 +171,17 @@ class Window_Stop(QMainWindow, ui_stop) :
     
     def f_btn_home(self) :
         print("home")
-        self.close()
+        self.hide()
         win_home.show()
     
     def f_btn_stop(self) :
         print("Stop Mode ")
-        self.close()
+        self.hide()
         win_stop.show()
 
 
 if __name__ == "__main__" :
     app = QApplication(sys.argv)
-    cnt = 0
     win_home = Window_Home()
     win_start = Window_Start()
     win_master = Window_Master()

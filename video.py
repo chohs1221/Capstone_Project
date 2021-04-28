@@ -1,5 +1,4 @@
-from img_test1 import *
-from img_test2 import *
+from opencv_header import *
 
 capture = cv2.VideoCapture(0)
 capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -47,7 +46,7 @@ while cv2.waitKey(33) != ord('q'):
     img_masked = mask(frame, low, high)
     cv2.imshow("img_masked", img_masked)
 
-    img_blur = Bluring(img_masked, blur)
+    img_blur = Blurring(img_masked, blur)
     cv2.imshow('img_blur', img_blur)
 
     img_binary = Grayscale(img_blur, g_scale)
@@ -56,10 +55,7 @@ while cv2.waitKey(33) != ord('q'):
     contours, img_contour = draw_Contours(img_binary, height, width, channel)
     cv2.imshow('contours', img_contour)
 
-    img_contourBox = draw_ContourBox(img_contour, contours, 300, 3, height, width, channel, frame)
-    cv2.putText(img_contourBox, "h: ("+str(low[0])+", "+str(high[0])+")", (10, 10), cv2.FONT_HERSHEY_DUPLEX, 0.5, (0, 0, 255), 1)
-    cv2.putText(img_contourBox, "s: ("+str(low[1])+", "+str(high[1])+")", (10, 25), cv2.FONT_HERSHEY_DUPLEX, 0.5, (0, 0, 255), 1)
-    cv2.putText(img_contourBox, "v: ("+str(low[2])+", "+str(high[2])+")", (10, 40), cv2.FONT_HERSHEY_DUPLEX, 0.5, (0, 0, 255), 1)
+    img_contourBox = draw_ContourBox(contours, 300, 3, frame)
     cv2.imshow('img_contourBox', img_contourBox)
 
     if cv2.waitKey(33) == ord('r'):
@@ -71,9 +67,6 @@ while cv2.waitKey(33) != ord('q'):
         cv2.setTrackbarPos("v_max", "img_contourBox", 250)
         cv2.setTrackbarPos("blur", "img_contourBox", 9)
         cv2.setTrackbarPos("g_scale", "img_contourBox", 100)
-
-
-
 
 capture.release()
 cv2.destroyAllWindows()
