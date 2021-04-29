@@ -280,6 +280,6 @@ if __name__ == "__main__" :
     win_status = Window_Status()
     win_stop = Window_Stop()
     win_home.show()
-    p1 = Process(target=opencv4)
+    p1 = threading.Thread(target=opencv4)
     p1.start()
     app.exec_()
