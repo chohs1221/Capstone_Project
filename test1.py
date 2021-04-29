@@ -1,13 +1,17 @@
-import cv2
-import time
-import serial
 import sys
+
+import cv2
+
+import serial
+
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
-from multiprocessing import Process
-import threading
+
 from opencv_header import *
 import resource_rc
+
+from multiprocessing import Process
+import threading
 
 def serial_():
     ser = serial.Serial('/dev/ttyACM0', 9600)
@@ -23,7 +27,7 @@ def onChange(pos):
     pass
 
 def opencv4():
-    capture = cv2.VideoCapture(1)
+    capture = cv2.VideoCapture(-1)
     capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
@@ -91,15 +95,14 @@ def opencv4():
     capture.release()
     cv2.destroyAllWindows()
 
-#UI파일 연결
-#단, UI파일은 Python 코드 파일과 같은 디렉토리에 위치해야한다.
+
 ui_home = uic.loadUiType("home.ui")[0]
 ui_start = uic.loadUiType("start.ui")[0]
 ui_master = uic.loadUiType("mastermode.ui")[0]
 ui_status = uic.loadUiType("status.ui")[0]
 ui_stop = uic.loadUiType("stop.ui")[0]
 
-#화면을 띄우는데 사용되는 Class 선언
+
 class Window_Home(QMainWindow, ui_home) :
     def __init__(self) :
         super().__init__()
@@ -270,13 +273,13 @@ class Window_Stop(QMainWindow, ui_stop) :
 
 if __name__ == "__main__" :
     app = QApplication(sys.argv)
-    cnt = 0
     win_home = Window_Home()
-    win_start = Window_Start()
-    win_master = Window_Master()
-    win_status = Window_Status()
-    win_stop = Window_Stop()
+    # win_start = Window_Start()
+    # win_master = Window_Master()
+    # win_status = Window_Status()
+    # win_stop = Window_Stop()
     win_home.show()
     p1 = threading.Thread(target=opencv4)
     p1.start()
     app.exec_()
+    
