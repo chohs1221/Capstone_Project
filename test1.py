@@ -1,5 +1,5 @@
 import sys
-
+import time
 import cv2
 
 import serial
@@ -14,19 +14,36 @@ from multiprocessing import Process
 import threading
 
 def serial_():
+    global angle
+    global status
     ser = serial.Serial('/dev/ttyACM0', 9600)
     while(1):
-        code = 100
-        if code=='q':
-            break
-        else:
-            code = code.encode('utf-8')
-            ser.write(code)
+        try:
+            for c in ser.read():
+                line.append(chr(c))
+
+                if c == 10:
+                    status = ''.join(line)
+
+                    del line[:]
+        except:
+            pass
+
+        try:
+            code = str(int(angle))
+            if code=='q':
+                break
+            else:
+                code = code.encode('utf-8')
+                ser.write(code)
+        except:
+            continue
 
 def onChange(pos):
     pass
 
 def opencv4():
+    global angle, cart_size
     capture = cv2.VideoCapture(-1)
     capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
@@ -79,7 +96,7 @@ def opencv4():
         contours, img_contour = draw_Contours(img_binary, height, width, channel)
         cv2.imshow('contours', img_contour)
 
-        img_contourBox = draw_ContourBox(contours, 300, 3, frame)
+        img_contourBox, angle, cart_size = draw_ContourBox(contours, 300, 3, frame)
         cv2.imshow('img_contourBox', img_contourBox)
 
         if cv2.waitKey(33) == ord('r'):
@@ -95,6 +112,12 @@ def opencv4():
     capture.release()
     cv2.destroyAllWindows()
 
+def count():
+    cnt = 0
+    while True:
+        cnt += 1
+        time.sleep(1)
+        print(cnt)
 
 ui_home = uic.loadUiType("home.ui")[0]
 ui_start = uic.loadUiType("start.ui")[0]
@@ -272,14 +295,19 @@ class Window_Stop(QMainWindow, ui_stop) :
 
 
 if __name__ == "__main__" :
+    angle = 0.0
+    cart_size = 0.0
+
     app = QApplication(sys.argv)
     win_home = Window_Home()
-    # win_start = Window_Start()
-    # win_master = Window_Master()
-    # win_status = Window_Status()
-    # win_stop = Window_Stop()
+    win_start = Window_Start()
+    win_master = Window_Master()
+    win_status = Window_Status()
+    win_stop = Window_Stop()
     win_home.show()
-    p1 = threading.Thread(target=opencv4)
-    p1.start()
+    # p1 = threading.Thread(target=opencv4)
+    # p1.start()
+    p2 = threading.Thread(target=count)
+    p2.start()
     app.exec_()
     

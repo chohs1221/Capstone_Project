@@ -51,7 +51,7 @@ def draw_ContourBox(contours, min_width, min_ratio, src):
             print("(x, y) = ({0})\n(width, height) = {1}\n(angle) = {2}".format(rect[0], rect[1], angle))
             #print(box)
 
-    return src
+    return src, angle, max(rect[1][0], rect[1][1])
 
 if __name__ == "__main__":
     img = cv2.imread('5.jpg')

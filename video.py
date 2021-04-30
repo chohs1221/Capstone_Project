@@ -55,7 +55,7 @@ while cv2.waitKey(33) != ord('q'):
     contours, img_contour = draw_Contours(img_binary, height, width, channel)
     cv2.imshow('contours', img_contour)
 
-    img_contourBox = draw_ContourBox(contours, 300, 3, frame)
+    img_contourBox, angle, cart_size = draw_ContourBox(contours, 300, 3, frame)
     cv2.imshow('img_contourBox', img_contourBox)
 
     if cv2.waitKey(33) == ord('r'):
