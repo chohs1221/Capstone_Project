@@ -117,7 +117,7 @@ def count():
     while True:
         cnt += 1
         time.sleep(1)
-        print(cnt)
+        print(angle)
 
 ui_home = uic.loadUiType("home.ui")[0]
 ui_start = uic.loadUiType("start.ui")[0]
@@ -305,9 +305,11 @@ if __name__ == "__main__" :
     win_status = Window_Status()
     win_stop = Window_Stop()
     win_home.show()
-    # p1 = threading.Thread(target=opencv4)
-    # p1.start()
+    p1 = threading.Thread(target=opencv4)
+    p1.start()
     p2 = threading.Thread(target=count)
     p2.start()
+    # p3 = threading.Thread(target=qwe)
+    # p3.start()
     app.exec_()
     
