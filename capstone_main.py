@@ -16,31 +16,52 @@ import resource_rc
 def audio():
     playsound("hello_world.wav")
 
-def serial_():
+def serial_run():
     global angle
     global status
-    ser = serial.Serial('/dev/ttyACM0', 9600)
-    while(1):
-        try:
-            for c in ser.read():
-                line.append(chr(c))
+    global connection
+    #ser = serial.Serial('/dev/ttyACM0', 9600)
+    while True:
+        if connection:
+            try:
+                res=ser.readline()
+                data=res.decode('utf-8')
 
-                if c == 10:
-                    status = ''.join(line)
+                if data=='\r' or data=='\n':
+                    continue
+                else:
+                    datalist=data.split('\t')
+                    for val in datalist:
+                        print(float(val))
 
-                    del line[:]
-        except:
-            pass
-
-        try:
-            code = str(int(angle))
-            if code=='q':
-                break
-            else:
+            except ValueError:
+                print("valueError")
+            except serial.SerialException:
+                print("disconnect")
+                ser.close()
+                connection=False
+            except UnicodeDecodeError:
+                print("UnicodeDecodeError")
+            
+            try:
+                code = str(int(angle))
                 code = code.encode('utf-8')
                 ser.write(code)
-        except:
-            continue
+            except:
+                print("ser.write() error!!")
+                continue
+                
+        else:
+            while True:
+                try:
+                    ser = serial.Serial('/dev/ttyACM0', 9600)
+
+                except serial.SerialException:
+                    continue
+                else:
+                    print("connect",self.ser)
+                    self.connection=True
+                    break
 
 def onChange(pos):
     pass
@@ -310,6 +331,7 @@ if __name__ == "__main__" :
     angle = 0.0
     cart_size = 0.0
 
+    connection = False
     # app = QApplication(sys.argv)
     # win_home = Window_Home()
     # win_start = Window_Start()
@@ -319,9 +341,11 @@ if __name__ == "__main__" :
     # win_home.show()
     p1 = threading.Thread(target=opencv4)
     p1.start()
+    #p1.join()
     p2 = threading.Thread(target=pyqt5)
     p2.start()
-    # p3 = threading.Thread(target=qwe)
+    p2.join()
+    # p3 = threading.Thread(target=serial_run)
     # p3.start()
     # app.exec_()
     
