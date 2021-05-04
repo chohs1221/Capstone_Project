@@ -1,20 +1,34 @@
 import sys
 import time
-from multiprocessing import Process
 import threading
 
+from opencv_header import *
+import resource_rc
+
+from collections import deque
 import serial
 import cv2
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
 
-from opencv_header import *
-import resource_rc
-
-# from playsound import playsound
 
 def audio():
-    playsound("hello_world.wav")
+    global status
+    while True:
+        if status:
+            switch = status.popleft()
+            if switch == 1:
+                playsound("audio_1.wav")
+            elif switch == 2:
+                pass
+                # playsound("q.wav")
+            elif switch == 3:
+                pass
+                # playsound("q.wav")
+            elif switch == 4:
+                playsound("q.wav")
+            elif switch == 5:
+                playsound("q.wav")
 
 def serial_run():
     global angle
@@ -23,16 +37,18 @@ def serial_run():
     #ser = serial.Serial('/dev/ttyACM0', 9600)
     while True:
         if connection:
+            # read
             try:
                 res=ser.readline()
                 data=res.decode('utf-8')
 
-                if data=='\r' or data=='\n':
-                    continue
-                else:
-                    datalist=data.split('\t')
-                    for val in datalist:
-                        print(float(val))
+                # if data=='\r' or data=='\n':
+                #     continue
+                # else:
+                #     datalist=data.split('\t')
+                #     for val in datalist:
+                #         print(float(val))
+                status.append(data)
 
             except ValueError:
                 print("valueError")
@@ -42,7 +58,7 @@ def serial_run():
                 connection=False
             except UnicodeDecodeError:
                 print("UnicodeDecodeError")
-            
+            # write
             try:
                 code = str(int(angle))
                 code = code.encode('utf-8')
@@ -59,8 +75,8 @@ def serial_run():
                 except serial.SerialException:
                     continue
                 else:
-                    print("connect",self.ser)
-                    self.connection=True
+                    print("connect")
+                    connection=True
                     break
 
 def onChange(pos):
@@ -331,6 +347,7 @@ if __name__ == "__main__" :
     angle = 0.0
     cart_size = 0.0
 
+    status = deque()
     connection = False
     # app = QApplication(sys.argv)
     # win_home = Window_Home()
