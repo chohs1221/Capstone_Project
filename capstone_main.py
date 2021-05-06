@@ -18,29 +18,33 @@ def audio():
         if status:
             switch = status.popleft()
             if switch == 1:
-                playsound("audio_1.wav")
+                print(1)
+                #playsound("audio_1.wav")
             elif switch == 2:
-                pass
+                print(2)
                 # playsound("q.wav")
             elif switch == 3:
-                pass
+                print(3)
                 # playsound("q.wav")
             elif switch == 4:
-                playsound("q.wav")
+                print(4)
+                # playsound("q.wav")
             elif switch == 5:
-                playsound("q.wav")
+                print(5)
+                # playsound("q.wav")
 
 def serial_run():
     global angle
     global status
     global connection
-    #ser = serial.Serial('/dev/ttyACM0', 9600)
+    
     while True:
         if connection:
             # read
             try:
                 res=ser.readline()
                 data=res.decode('utf-8')
+                print(data)
 
                 # if data=='\r' or data=='\n':
                 #     continue
@@ -48,7 +52,7 @@ def serial_run():
                 #     datalist=data.split('\t')
                 #     for val in datalist:
                 #         print(float(val))
-                status.append(data)
+                status.append(int(data))
 
             except ValueError:
                 print("valueError")
@@ -60,9 +64,8 @@ def serial_run():
                 print("UnicodeDecodeError")
             # write
             try:
-                code = str(int(angle))
-                code = code.encode('utf-8')
-                ser.write(code)
+                code = str("%05.2f" % (angle+45))
+                ser.write(code.encode('utf-8'))
             except:
                 print("ser.write() error!!")
                 continue
@@ -70,7 +73,7 @@ def serial_run():
         else:
             while True:
                 try:
-                    ser = serial.Serial('/dev/ttyACM0', 9600)
+                    ser = serial.Serial('/dev/ttyUSB0', 9600, timeout = 1)
 
                 except serial.SerialException:
                     continue
@@ -151,14 +154,6 @@ def opencv4():
 
     capture.release()
     cv2.destroyAllWindows()
-
-def count():
-    global angle
-    cnt = 0
-    while True:
-        cnt += 1
-        print(angle)
-        time.sleep(1)
 
 def pyqt5():
     ui_home = uic.loadUiType("home.ui")[0]
@@ -361,8 +356,10 @@ if __name__ == "__main__" :
     #p1.join()
     p2 = threading.Thread(target=pyqt5)
     p2.start()
-    p2.join()
+    #p2.join()
     # p3 = threading.Thread(target=serial_run)
     # p3.start()
+    # p4 = threading.Thread(target=audio)
+    # p4.start()
     # app.exec_()
     
