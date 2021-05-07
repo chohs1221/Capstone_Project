@@ -9,6 +9,7 @@ from collections import deque
 import serial
 import cv2
 from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 from PyQt5 import uic
 
 
@@ -33,10 +34,16 @@ def audio():
                 print(5)
                 # playsound("q.wav")
 
+def angle2string(angle):
+    if angle >= 0:
+        return '+' + str("%05.2f" % (angle))
+    elif angle < 0:
+        return '-' + str("%05.2f" % (-angle))
+
 def serial_run():
-    global angle
     global status
     global connection
+    global angle
     
     while True:
         if connection:
@@ -58,14 +65,15 @@ def serial_run():
                 print("valueError")
             except serial.SerialException:
                 print("disconnect")
-                ser.close()
                 connection=False
             except UnicodeDecodeError:
                 print("UnicodeDecodeError")
+
             # write
             try:
-                code = str("%05.2f" % (angle+45))
-                ser.write(code.encode('utf-8'))
+                slope = angle2string(angle)
+                ser.write((slope).encode('utf-8'))
+                print(slope)
             except:
                 print("ser.write() error!!")
                 continue
@@ -162,6 +170,8 @@ def pyqt5():
     ui_status = uic.loadUiType("status.ui")[0]
     ui_stop = uic.loadUiType("stop.ui")[0]
 
+    global status
+    
     class Window_Home(QMainWindow, ui_home) :
         def __init__(self) :
             super().__init__()
@@ -212,6 +222,11 @@ def pyqt5():
             cp = QDesktopWidget().availableGeometry().center()
             qr.moveCenter(cp)
             self.move(qr.topLeft())
+            
+            # 타이머
+            self.timer = QTimer(self)
+            self.timer.start(500)
+            self.timer.timeout.connect(self.f_timeout)
 
             # 버튼 이벤트 설정
             self.q_btn_home.clicked.connect(self.f_btn_home)
@@ -226,6 +241,11 @@ def pyqt5():
             print("Stop Mode ")
             self.close()
             win_stop.show()
+
+        def f_timeout(self):
+            pass
+            if stat
+            # 라벨 이미지 변경
 
     class Window_Master(QMainWindow, ui_master) :
         def __init__(self) :
@@ -357,8 +377,8 @@ if __name__ == "__main__" :
     p2 = threading.Thread(target=pyqt5)
     p2.start()
     #p2.join()
-    # p3 = threading.Thread(target=serial_run)
-    # p3.start()
+    p3 = threading.Thread(target=serial_run)
+    p3.start()
     # p4 = threading.Thread(target=audio)
     # p4.start()
     # app.exec_()

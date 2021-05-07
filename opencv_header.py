@@ -48,7 +48,7 @@ def draw_ContourBox(contours, min_width, min_ratio, src):
             box_ = sorted(box, key = lambda x: x[0])
             dx = box_[2][0]-box_[0][0]
             dy = box_[0][1]-box_[2][1]
-            angle = math.atan(dy/dx) * 180 / math.pi
+            angle = math.atan2(dy,dx) * 180 / math.pi
             #print("(x, y) = ({0})\n(width, height) = {1}\n(angle) = {2}".format(rect[0], rect[1], angle))
             #print(box)
 

@@ -1,7 +1,7 @@
 from opencv_header import *
 
 if __name__ == "__main__":
-    src = cv2.imread("2.jpg", cv2.IMREAD_COLOR)
+    src = cv2.imread("12.png", cv2.IMREAD_COLOR)
     src = cv2.resize(src, dsize=(640, 480), interpolation=cv2.INTER_AREA)
     height, width, channel = src.shape
     cv2.imshow("src", src)
@@ -20,7 +20,7 @@ if __name__ == "__main__":
     contours, img_contour = draw_Contours(img_binary, height, width, channel)
     cv2.imshow('contours', img_contour)
 
-    img_contourBox = draw_ContourBox(contours, 300, 3, src)
+    img_contourBox, angle, cart_size = draw_ContourBox(contours, 300, 3, src)
     cv2.imshow('img_contourBox', img_contourBox)
 
     cv2.waitKey()
