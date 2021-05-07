@@ -193,22 +193,22 @@ def pyqt5():
         
         def f_btn_start(self) :
             print("Start Mode ")
-            self.close()
+            self.hide()
             win_start.show()
 
         def f_btn_mastermode(self) :
             print("Mater Mode ")
-            self.close()
+            self.hide()
             win_master.show()
 
         def f_btn_status(self) :
             print("Status Mode ")
-            self.close()
+            self.hide()
             win_status.show()
         
         def f_btn_stop(self) :
             print("Stop Mode ")
-            self.close()
+            self.hide()
             win_stop.show()
 
     class Window_Start(QMainWindow, ui_start) :
@@ -234,18 +234,31 @@ def pyqt5():
         
         def f_btn_home(self) :
             print("home")
-            self.close()
+            self.hide()
             win_home.show()
         
         def f_btn_stop(self) :
             print("Stop Mode ")
-            self.close()
+            self.hide()
             win_stop.show()
 
         def f_timeout(self):
-            pass
-            if stat
-            # 라벨 이미지 변경
+            if status == 1:
+                pass
+                # 라벨 이미지 변경
+            elif status == 2:
+                pass
+                # 라벨 이미지 변경
+            elif status == 3:
+                pass
+                # 라벨 이미지 변경
+            elif status == 4:
+                pass
+                # 라벨 이미지 변경
+            elif status == 5:
+                pass
+                # 라벨 이미지 변경
+
 
     class Window_Master(QMainWindow, ui_master) :
         def __init__(self) :
@@ -274,7 +287,7 @@ def pyqt5():
         
         def f_btn_home(self) :
             print("home")
-            self.close()
+            self.hide()
             win_home.show()
 
         def f_gBox_size(self) :
@@ -295,7 +308,7 @@ def pyqt5():
         
         def f_btn_stop(self) :
             print("Stop Mode ")
-            self.close()
+            self.hide()
             win_stop.show()
 
     class Window_Status(QMainWindow, ui_status) :
@@ -316,12 +329,12 @@ def pyqt5():
         
         def f_btn_home(self) :
             print("home")
-            self.close()
+            self.hide()
             win_home.show()
         
         def f_btn_stop(self) :
             print("Stop Mode ")
-            self.close()
+            self.hide()
             win_stop.show()
 
     class Window_Stop(QMainWindow, ui_stop) :
@@ -341,12 +354,12 @@ def pyqt5():
         
         def f_btn_home(self) :
             print("home")
-            self.close()
+            self.hide()
             win_home.show()
         
         def f_btn_stop(self) :
             print("Stop Mode ")
-            self.close()
+            self.hide()
             win_stop.show()
 
     app = QApplication(sys.argv)
