@@ -11,6 +11,7 @@ import cv2
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5 import uic
+from PyQt5.QtGui import *
 
 
 def audio():
@@ -183,6 +184,7 @@ def pyqt5():
             cp = QDesktopWidget().availableGeometry().center()
             qr.moveCenter(cp)
             self.move(qr.topLeft())
+            self.showFullScreen()
             
             # 버튼 이벤트 설정
             self.q_btn_start.clicked.connect(self.f_btn_start)
@@ -195,21 +197,25 @@ def pyqt5():
             print("Start Mode ")
             self.hide()
             win_start.show()
+            win_start.showFullScreen()
 
         def f_btn_mastermode(self) :
             print("Mater Mode ")
             self.hide()
             win_master.show()
+            win_master.showFullScreen()
 
         def f_btn_status(self) :
             print("Status Mode ")
             self.hide()
             win_status.show()
+            win_status.showFullScreen()
         
         def f_btn_stop(self) :
             print("Stop Mode ")
             self.hide()
             win_stop.show()
+            win_stop.showFullScreen()
 
     class Window_Start(QMainWindow, ui_start) :
         def __init__(self) :
@@ -271,6 +277,7 @@ def pyqt5():
             cp = QDesktopWidget().availableGeometry().center()
             qr.moveCenter(cp)
             self.move(qr.topLeft())
+            #self.showFullScreen()
 
             # 버튼 이벤트 설정
             self.q_btn_home.clicked.connect(self.f_btn_home)
@@ -322,6 +329,7 @@ def pyqt5():
             cp = QDesktopWidget().availableGeometry().center()
             qr.moveCenter(cp)
             self.move(qr.topLeft())
+            #self.showFullScreen()
 
             # 버튼 이벤트 설정
             self.q_btn_home.clicked.connect(self.f_btn_home)
@@ -348,6 +356,7 @@ def pyqt5():
             cp = QDesktopWidget().availableGeometry().center()
             qr.moveCenter(cp)
             self.move(qr.topLeft())
+            #self.showFullScreen()
 
             # 버튼 이벤트 설정
             self.q_btn_home.clicked.connect(self.f_btn_home)
@@ -384,14 +393,14 @@ if __name__ == "__main__" :
     # win_status = Window_Status()
     # win_stop = Window_Stop()
     # win_home.show()
-    p1 = threading.Thread(target=opencv4)
-    p1.start()
+    # p1 = threading.Thread(target=opencv4)
+    # p1.start()
     #p1.join()
     p2 = threading.Thread(target=pyqt5)
     p2.start()
     #p2.join()
-    p3 = threading.Thread(target=serial_run)
-    p3.start()
+    # p3 = threading.Thread(target=serial_run)
+    # p3.start()
     # p4 = threading.Thread(target=audio)
     # p4.start()
     # app.exec_()
