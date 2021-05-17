@@ -6,41 +6,47 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1024</width>
     <height>600</height>
    </rect>
+  </property>
+  <property name="cursor">
+   <cursorShape>BlankCursor</cursorShape>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="q_lb_img">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1020</width>
+      <height>550</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>BlankCursor</cursorShape>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
    <widget class="QPushButton" name="q_btn_home">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>30</y>
-      <width>120</width>
-      <height>60</height>
+      <x>920</x>
+      <y>500</y>
+      <width>100</width>
+      <height>50</height>
      </rect>
     </property>
-    <property name="styleSheet">
-     <string notr="true">border-image: url(:/btn/11.png);</string>
+    <property name="cursor">
+     <cursorShape>BlankCursor</cursorShape>
     </property>
     <property name="text">
      <string>Home</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="q_btn_stop">
-    <property name="geometry">
-     <rect>
-      <x>630</x>
-      <y>450</y>
-      <width>160</width>
-      <height>100</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>STOP</string>
     </property>
    </widget>
   </widget>
@@ -49,8 +55,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>26</height>
+     <width>1024</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>

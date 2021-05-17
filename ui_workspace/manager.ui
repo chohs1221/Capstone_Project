@@ -6,69 +6,17 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1024</width>
     <height>600</height>
    </rect>
+  </property>
+  <property name="cursor">
+   <cursorShape>ArrowCursor</cursorShape>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGroupBox" name="groupBox">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>140</y>
-      <width>241</width>
-      <height>351</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Select Size</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-    <widget class="QRadioButton" name="q_rad_large">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>60</y>
-       <width>161</width>
-       <height>71</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Large</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="q_rad_midium">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>160</y>
-       <width>171</width>
-       <height>71</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Midium</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="q_rad_small">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>260</y>
-       <width>161</width>
-       <height>71</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Small</string>
-     </property>
-    </widget>
-   </widget>
    <widget class="QPushButton" name="q_btn_home">
     <property name="geometry">
      <rect>
@@ -78,6 +26,9 @@
       <height>60</height>
      </rect>
     </property>
+    <property name="cursor">
+     <cursorShape>BlankCursor</cursorShape>
+    </property>
     <property name="text">
      <string>Home</string>
     </property>
@@ -85,11 +36,14 @@
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>140</y>
+      <x>180</x>
+      <y>70</y>
       <width>241</width>
       <height>351</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>BlankCursor</cursorShape>
     </property>
     <property name="title">
      <string>Select Pressure</string>
@@ -102,12 +56,15 @@
       <rect>
        <x>40</x>
        <y>140</y>
-       <width>121</width>
+       <width>141</width>
        <height>51</height>
       </rect>
      </property>
+     <property name="cursor">
+      <cursorShape>BlankCursor</cursorShape>
+     </property>
      <property name="text">
-      <string>Level1</string>
+      <string>Pressure Level1</string>
      </property>
     </widget>
     <widget class="QRadioButton" name="q_rad_Level2">
@@ -115,12 +72,15 @@
       <rect>
        <x>40</x>
        <y>200</y>
-       <width>121</width>
+       <width>141</width>
        <height>51</height>
       </rect>
      </property>
+     <property name="cursor">
+      <cursorShape>BlankCursor</cursorShape>
+     </property>
      <property name="text">
-      <string>Level2</string>
+      <string>Pressure Level2</string>
      </property>
     </widget>
     <widget class="QRadioButton" name="q_rad_Level3">
@@ -128,12 +88,15 @@
       <rect>
        <x>40</x>
        <y>260</y>
-       <width>121</width>
+       <width>141</width>
        <height>51</height>
       </rect>
      </property>
+     <property name="cursor">
+      <cursorShape>BlankCursor</cursorShape>
+     </property>
      <property name="text">
-      <string>Level3</string>
+      <string>Pressure Level3</string>
      </property>
     </widget>
     <widget class="QCheckBox" name="q_chkb_washonly">
@@ -145,6 +108,9 @@
        <height>51</height>
       </rect>
      </property>
+     <property name="cursor">
+      <cursorShape>BlankCursor</cursorShape>
+     </property>
      <property name="text">
       <string>Wash Only</string>
      </property>
@@ -153,11 +119,14 @@
    <widget class="QPushButton" name="q_btn_stop">
     <property name="geometry">
      <rect>
-      <x>630</x>
+      <x>10</x>
       <y>450</y>
-      <width>160</width>
+      <width>1000</width>
       <height>100</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>BlankCursor</cursorShape>
     </property>
     <property name="text">
      <string>STOP</string>
@@ -169,7 +138,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1024</width>
      <height>22</height>
     </rect>
    </property>

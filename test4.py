@@ -1,2 +1,2 @@
-
-print(str("%05.2f" % (0)))
+from playsound import playsound
+playsound("cartin.wav")

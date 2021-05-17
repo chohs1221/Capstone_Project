@@ -36,6 +36,7 @@ def mask(bgr, low, high):
 # ContourBox (contour, min_width, min ratio, src) >> contour box img
 def draw_ContourBox(contours, min_width, min_ratio, src):
     angle = 0
+    cart_size = 0
     for contour in contours:
         rect = cv2.minAreaRect(contour)
         if max(rect[1][0], rect[1][1]) > min_width and max(rect[1][0]/rect[1][1], rect[1][1]/rect[1][0]) > min_ratio:
@@ -49,10 +50,18 @@ def draw_ContourBox(contours, min_width, min_ratio, src):
             dx = box_[2][0]-box_[0][0]
             dy = box_[0][1]-box_[2][1]
             angle = math.atan2(dy,dx) * 180 / math.pi
+            cart_handle = max(rect[1][0], rect[1][1])
+            if cart_handle < 400:
+                cart_size = 0
+            elif 400 <= cart_handle < 450:
+                cart_size = 1
+            elif 450 <= cart_handle:
+                cart_size = 2
             #print("(x, y) = ({0})\n(width, height) = {1}\n(angle) = {2}".format(rect[0], rect[1], angle))
             #print(box)
+            print(cart_handle)
 
-    return src, angle, max(rect[1][0], rect[1][1])
+    return src, angle, cart_size
 
 if __name__ == "__main__":
     img = cv2.imread('5.jpg')
