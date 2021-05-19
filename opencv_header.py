@@ -59,7 +59,7 @@ def draw_ContourBox(contours, min_width, min_ratio, src):
                 cart_size = 2
             #print("(x, y) = ({0})\n(width, height) = {1}\n(angle) = {2}".format(rect[0], rect[1], angle))
             #print(box)
-            print(cart_handle)
+            # print(cart_handle)
 
     return src, angle, cart_size
 
