@@ -15,33 +15,51 @@ from PyQt5 import uic
 from PyQt5.QtGui import *
 
 
-def audio():
-    global status
-    global switch
-    while True:
-        if status:
-            switch = status.popleft()
-            if switch == 1:
-                print(1)
-                #playsound("cartin.wav")
-            elif switch == 2:
-                print(2)
-                # playsound("cartout.wav")
-            elif switch == 3:
-                print(3)
-                # playsound("q.wav")
-            elif switch == 4:
-                print(4)
-                # playsound("q.wav")
-            elif switch == 5:
-                print(5)
-                # playsound("q.wav")
+def audio(num):
+    # global status
+    # global switch
+    # while True:
+    #     if status:
+    #         switch = status.popleft()
+    #         if switch == 1:
+    #             print(1)
+    #             #playsound("cartin.wav")
+    #         elif switch == 2:
+    #             print(2)
+    #             # playsound("cartout.wav")
+    #         elif switch == 3:
+    #             print(3)
+    #             # playsound("q.wav")
+    #         elif switch == 4:
+    #             print(4)
+    #             # playsound("q.wav")
+    #         elif switch == 5:
+    #             print(5)
+    #             # playsound("q.wav")
+    try:
+        if num == 1:
+            print(1)
+            #playsound("cartin.wav")
+        elif num == 2:
+            print(2)
+            # playsound("cartout.wav")
+        elif num == 3:
+            print(3)
+            # playsound("q.wav")
+        elif num == 4:
+            print(4)
+            # playsound("q.wav")
+        elif num == 5:
+            print(5)
+            # playsound("q.wav")
+    except:
+        pass
 
 def angle2string(angle):
     if angle >= 0:
-        return '++' + str("%05.2f" % (angle))
+        return '+' + str("%05.2f" % (angle))
     elif angle < 0:
-        return '--' + str("%05.2f" % (-angle))
+        return '-' + str("%05.2f" % (-angle))
 
 def serial_run():
     global connection
@@ -54,6 +72,7 @@ def serial_run():
     global pump
     global stop_flag
     
+    data_pre = 0
     while True:
         if connection:
             # read
@@ -61,14 +80,9 @@ def serial_run():
                 res=ser.readline()
                 data=res.decode('utf-8')
                 print(data)
-
-                # if data=='\r' or data=='\n':
-                #     continue
-                # else:
-                #     datalist=data.split('\t')
-                #     for val in datalist:
-                #         print(float(val))
-                status.append(int(data))
+                if (int(data) != data_pre) and (1 <= int(data) <= 4):
+                    data_pre = int(data)
+                    audio(num = data)
 
             except ValueError:
                 print("valueError")
@@ -80,11 +94,16 @@ def serial_run():
 
             # write
             try:
-                slope = angle2string(angle)
+                # slope = angle2string(angle)
+                if angle >= 0:
+                    sign = 0b00000000
+                else:
+                    sign = 0b10000000
                 # 7 + 1 + 1 + 1 + 1= 10
-                data_w = slope + str(cart_size) + str(mode) + str(pump) + str(stop_flag)
-                ser.write(('qq' + data_w + 'qq').encode('utf-8'))
-                print(data_w)
+                # data_w = slope + str(cart_size) + str(mode) + str(pump) + str(stop_flag)
+                # 0xff, 0xff, 부호+각도, 10?, 11?, 12?, 13?, 0xfe => 8byte
+                ser.write([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, 254])
+                print(bytearray([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, 254]))
             except:
                 print("ser.write() error!!")
                 continue
@@ -206,7 +225,7 @@ def pyqt5():
         
         def f_btn_start(self) :
             global stop_flag
-            stop_flag = 1
+            stop_flag = 0
             print("Start Mode ")
             self.close()
             win_start.show()
@@ -226,7 +245,7 @@ def pyqt5():
         
         def f_btn_stop(self) :
             global stop_flag
-            stop_flag = 1
+            stop_flag = 131
             print("Stop Mode ")
             self.close()
             win_stop.show()
@@ -317,27 +336,27 @@ def pyqt5():
         def f_chkb_washonly(self) :
             global mode
             if self.q_chkb_washonly.isChecked() :
-                mode = 1
+                mode = 111
                 print("Wash Only")
             else :
-                mode = 0
+                mode = 110
                 print("Wash and Clean")
         
         def f_gBox_pressure(self) :
             global pump
             if self.q_rad_Level1.isChecked():
-                pump = 0
+                pump = 120
                 print("level 1")
             elif self.q_rad_Level2.isChecked():
-                pump = 1
+                pump = 121
                 print("level 2")
             elif self.q_rad_Level3.isChecked():
-                pump = 2
+                pump = 122
                 print("level 3")
         
         def f_btn_stop(self) :
             global stop_flag
-            stop_flag = 1
+            stop_flag = 131
             print("Stop Mode ")
             self.close()
             win_stop.show()
@@ -378,7 +397,7 @@ def pyqt5():
         
         def f_btn_stop(self) :
             global stop_flag
-            stop_flag = 1
+            stop_flag = 131
             print("Stop Mode ")
             self.close()
             win_stop.show()
@@ -441,10 +460,10 @@ def pyqt5():
 if __name__ == "__main__" :
     # write
     angle = 0.0
-    cart_size = 0
-    mode = 0
-    pump = 0
-    stop_flag = 1
+    cart_size = 100
+    mode = 110
+    pump = 120
+    stop_flag = 130
 
     # read
     level = 0
