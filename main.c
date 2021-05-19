@@ -228,27 +228,47 @@ int flag;
 
 							//USART//
 
-uint8_t Rx_data[1];					//0~5: slope 6: length 7: mode 8: pump pwm(flag) 9: stop(flag)
-uint8_t queue_buffer[255] = {0,};
-uint8_t head;
-uint8_t tail;
-void push(uint8_t new_data)
-{
-  queue_buffer[head] = new_data; 
-  head++;
-  if (head >= 255) {
-	  head = 0;
-  }
+void Uart_rx_dma_handler(){
+	head_pos = huart2.RxXferSize - huart2.hdmarx->Instance->NDTR-1;
+	while(tail_pos != head_pos) {
+		switch(PacketMode){
+			case 0:
+				if (rx_dma_buffer[tail_pos] == 0xFF){
+					rx_buf[checkSize++] = rx_dma_buffer[tail_pos];
+					if (checkSize == 2){
+						PacketMode = 1;
+					}
+				}
+				else{
+					checkSize = 0;
+				}
+				break;
+			
+			case 1:
+				rx_buf[checkSize++] = rx_dma_buffer[tail_pos];
+				if (checkSize == 8){
+					for (int i = 3; i < 7; i++)
+						checkSum += rx_buf[i];
+					if (rx_buf[7] == checkSum){
+						// 데이터 저장
+					}
+					else{
+						// 데이터 저장
+					}
+					checkSum = 0;
+					checkSize = 0;
+					PacketMode = 0;
+				}
+				else if (checkSize > 7){
+					checkSum = 0;
+					checkSize = 0;
+					PacketMode = 0;
+				}
+		}
+		tail_pos++;
+	}
 }
-uint8_t pop(void)
-{
-  uint8_t pop_data = queue_buffer[tail];  
-  tail++;
-  if (tail >= 255) {
-    tail = 0;
-  }
-  return pop_data;
-}
+
 uint8_t Tx_data1[] = "1";
 volatile float slope = 0.0;
 //volatile int length;
@@ -919,7 +939,7 @@ int main(void)
   MX_TIM9_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_UART_Receive_IT(&huart2, (uint8_t*)Rx_data, 1);
+  // HAL_UART_Receive_IT(&huart2, (uint8_t*)Rx_data, 8);
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -944,7 +964,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	
     /* USER CODE BEGIN 3 */
 
   }
@@ -1004,12 +1024,12 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
-{
-	HAL_UART_Transmit(&huart2, (uint8_t*)Tx_data1, txLen,10);
-	slope = atof(Rx_data);			//-180~+180 degree
-	HAL_UART_Receive_IT(&huart2, (uint8_t*)Rx_data, 1);
-}
+// void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
+// {
+// 	HAL_UART_Transmit(&huart2, (uint8_t*)Tx_data1, txLen,10);
+// 	for (int i = 0; i < 8; i++) push(Rx_data[i]);
+// 	HAL_UART_Receive_IT(&huart2, (uint8_t*)Rx_data, 8);
+// }
 
 /* USER CODE END 4 */
 

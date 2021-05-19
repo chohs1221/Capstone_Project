@@ -39,7 +39,7 @@ def audio(num):
     try:
         if num == 1:
             print(1)
-            #playsound("cartin.wav")
+            playsound("cartin.wav")
         elif num == 2:
             print(2)
             # playsound("cartout.wav")
@@ -82,6 +82,7 @@ def serial_run():
                 print(data)
                 if (int(data) != data_pre) and (1 <= int(data) <= 4):
                     data_pre = int(data)
+                    print(data_pre)
                     audio(num = data)
 
             except ValueError:
@@ -102,8 +103,9 @@ def serial_run():
                 # 7 + 1 + 1 + 1 + 1= 10
                 # data_w = slope + str(cart_size) + str(mode) + str(pump) + str(stop_flag)
                 # 0xff, 0xff, 부호+각도, 10?, 11?, 12?, 13?, 0xfe => 8byte
-                ser.write([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, 254])
-                print(bytearray([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, 254]))
+                checksum = cart_size + mode + pump + stop_flag
+                ser.write([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum])
+                # print(bytearray([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum]))
             except:
                 print("ser.write() error!!")
                 continue
@@ -245,7 +247,7 @@ def pyqt5():
         
         def f_btn_stop(self) :
             global stop_flag
-            stop_flag = 131
+            stop_flag = 1
             print("Stop Mode ")
             self.close()
             win_stop.show()
@@ -336,27 +338,27 @@ def pyqt5():
         def f_chkb_washonly(self) :
             global mode
             if self.q_chkb_washonly.isChecked() :
-                mode = 111
+                mode = 1
                 print("Wash Only")
             else :
-                mode = 110
+                mode = 0
                 print("Wash and Clean")
         
         def f_gBox_pressure(self) :
             global pump
             if self.q_rad_Level1.isChecked():
-                pump = 120
+                pump = 0
                 print("level 1")
             elif self.q_rad_Level2.isChecked():
-                pump = 121
+                pump = 1
                 print("level 2")
             elif self.q_rad_Level3.isChecked():
-                pump = 122
+                pump = 2
                 print("level 3")
         
         def f_btn_stop(self) :
             global stop_flag
-            stop_flag = 131
+            stop_flag = 1
             print("Stop Mode ")
             self.close()
             win_stop.show()
@@ -397,7 +399,7 @@ def pyqt5():
         
         def f_btn_stop(self) :
             global stop_flag
-            stop_flag = 131
+            stop_flag = 1
             print("Stop Mode ")
             self.close()
             win_stop.show()
@@ -459,11 +461,11 @@ def pyqt5():
 
 if __name__ == "__main__" :
     # write
-    angle = 0.0
-    cart_size = 100
-    mode = 110
-    pump = 120
-    stop_flag = 130
+    angle = 10.0
+    cart_size = 0
+    mode = 0
+    pump = 0
+    stop_flag = 0
 
     # read
     level = 0
@@ -483,8 +485,8 @@ if __name__ == "__main__" :
     # p1 = threading.Thread(target=opencv4)
     # p1.start()
     # p1.join()
-    p2 = threading.Thread(target=pyqt5)
-    p2.start()
+    # p2 = threading.Thread(target=pyqt5)
+    # p2.start()
     # p2.join()
     p3 = threading.Thread(target=serial_run)
     p3.start()
