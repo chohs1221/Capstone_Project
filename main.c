@@ -228,7 +228,27 @@ int flag;
 
 							//USART//
 
-uint8_t Rx_data[10];					//0~5: slope 6: length 7: mode 8: pump pwm(flag) 9: stop(flag)
+uint8_t Rx_data[1];					//0~5: slope 6: length 7: mode 8: pump pwm(flag) 9: stop(flag)
+uint8_t queue_buffer[255] = {0,};
+uint8_t head;
+uint8_t tail;
+void push(uint8_t new_data)
+{
+  queue_buffer[head] = new_data; 
+  head++;
+  if (head >= 255) {
+	  head = 0;
+  }
+}
+uint8_t pop(void)
+{
+  uint8_t pop_data = queue_buffer[tail];  
+  tail++;
+  if (tail >= 255) {
+    tail = 0;
+  }
+  return pop_data;
+}
 uint8_t Tx_data1[] = "1";
 volatile float slope = 0.0;
 //volatile int length;
@@ -899,7 +919,7 @@ int main(void)
   MX_TIM9_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_UART_Receive_IT(&huart2, (uint8_t*)Rx_data, 10);
+  HAL_UART_Receive_IT(&huart2, (uint8_t*)Rx_data, 1);
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -988,7 +1008,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
 {
 	HAL_UART_Transmit(&huart2, (uint8_t*)Tx_data1, txLen,10);
 	slope = atof(Rx_data);			//-180~+180 degree
-	HAL_UART_Receive_IT(&huart2, (uint8_t*)Rx_data, 10);
+	HAL_UART_Receive_IT(&huart2, (uint8_t*)Rx_data, 1);
 }
 
 /* USER CODE END 4 */
