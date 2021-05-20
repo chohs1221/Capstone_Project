@@ -8,7 +8,7 @@ while True:
     ser.write(op)
     print("write 성공")
     data = ser.readline()
-    print("R: ", data.decode('utf-8'))
+    print("R: ", int.from_bytes(data, byteorder = 'little'))
     
     if op is 'q':
         ser.close()

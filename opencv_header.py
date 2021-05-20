@@ -55,8 +55,8 @@ def draw_ContourBox(contours, min_width, min_ratio, src):
                 cart_size = 0
             elif 400 <= cart_handle < 450:
                 cart_size = 1
-            elif 450 <= cart_handle:
-                cart_size = 2
+            # elif 450 <= cart_handle:
+            #     cart_size = 2
             #print("(x, y) = ({0})\n(width, height) = {1}\n(angle) = {2}".format(rect[0], rect[1], angle))
             #print(box)
             # print(cart_handle)

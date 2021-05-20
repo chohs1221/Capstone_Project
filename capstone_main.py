@@ -42,7 +42,7 @@ def audio(num):
             playsound("cartin.wav")
         elif num == 2:
             print(2)
-            # playsound("cartout.wav")
+            playsound("cartout.wav")
         elif num == 3:
             print(3)
             # playsound("q.wav")
@@ -52,6 +52,8 @@ def audio(num):
         elif num == 5:
             print(5)
             # playsound("q.wav")
+        else:
+            pass
     except:
         pass
 
@@ -77,9 +79,8 @@ def serial_run():
         if connection:
             # read
             try:
-                res=ser.readline()
-                data=res.decode('utf-8')
-                print(data)
+                res = ser.readline()
+                data = int.from_bytes(res, byteorder = 'little')
                 if (int(data) != data_pre) and (1 <= int(data) <= 4):
                     data_pre = int(data)
                     print(data_pre)
@@ -482,8 +483,8 @@ if __name__ == "__main__" :
     # win_status = Window_Status()
     # win_stop = Window_Stop()
     # win_home.show()
-    # p1 = threading.Thread(target=opencv4)
-    # p1.start()
+    p1 = threading.Thread(target=opencv4)
+    p1.start()
     # p1.join()
     # p2 = threading.Thread(target=pyqt5)
     # p2.start()
