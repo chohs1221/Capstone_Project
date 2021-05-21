@@ -16,42 +16,34 @@ from PyQt5.QtGui import *
 
 
 def audio(num):
-    # global status
-    # global switch
-    # while True:
-    #     if status:
-    #         switch = status.popleft()
-    #         if switch == 1:
-    #             print(1)
-    #             #playsound("cartin.wav")
-    #         elif switch == 2:
-    #             print(2)
-    #             # playsound("cartout.wav")
-    #         elif switch == 3:
-    #             print(3)
-    #             # playsound("q.wav")
-    #         elif switch == 4:
-    #             print(4)
-    #             # playsound("q.wav")
-    #         elif switch == 5:
-    #             print(5)
-    #             # playsound("q.wav")
     try:
-        if num == 1:
-            print(1)
+        if num == 0:
+            print(0)
             playsound("cartin.wav")
+        elif num == 1:
+            print(1)
+            playsound("cartout.wav")
         elif num == 2:
             print(2)
-            playsound("cartout.wav")
+            playsound("cartin.wav")
         elif num == 3:
             print(3)
-            # playsound("q.wav")
-        elif num == 4:
-            print(4)
-            # playsound("q.wav")
+            playsound("cartout.wav")
+        # elif num == 4:
+        #     print(4)
+        #     playsound("cartout.wav")
         elif num == 5:
             print(5)
-            # playsound("q.wav")
+            playsound("cartin.wav")
+        elif num == 6:
+            print(6)
+            playsound("cartout.wav")
+        elif num == 7:
+            print(7)
+            playsound("cartin.wav")
+        elif num == 8:
+            print(8)
+            playsound("cartin.wav")
         else:
             pass
     except:
@@ -65,14 +57,17 @@ def angle2string(angle):
 
 def serial_run():
     global connection
-    # read
-    global status
+    global daily
+    global accumulate
     # write
     global angle
     global cart_size
     global mode
     global pump
     global stop_flag
+    #read
+    global data
+    global empty
     
     data_pre = 0
     while True:
@@ -81,10 +76,17 @@ def serial_run():
             try:
                 res = ser.readline()
                 data = int.from_bytes(res, byteorder = 'little')
-                if (int(data) != data_pre) and (1 <= int(data) <= 4):
-                    data_pre = int(data)
+                if ((data % 10) != data_pre) and (0 <= (data % 10) <= 7):
+                    data_pre = (data % 10)
                     print(data_pre)
-                    audio(num = data)
+                    if data_pre == 7:
+                        accumulate += 1
+                        daily += 1
+                    audio(num = (data % 10))
+                if (data // 10) == 0:
+                    empty = 0
+                elif (data // 10) == 1:
+                    empty = 1
 
             except ValueError:
                 print("valueError")
@@ -101,9 +103,7 @@ def serial_run():
                     sign = 0b00000000
                 else:
                     sign = 0b10000000
-                # 7 + 1 + 1 + 1 + 1= 10
-                # data_w = slope + str(cart_size) + str(mode) + str(pump) + str(stop_flag)
-                # 0xff, 0xff, 부호+각도, 10?, 11?, 12?, 13?, 0xfe => 8byte
+                # 0xff, 0xff, 부호+각도, 01?, 01?, 012?, 01?, 01234 => 8byte
                 checksum = cart_size + mode + pump + stop_flag
                 ser.write([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum])
                 # print(bytearray([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum]))
@@ -278,34 +278,16 @@ def pyqt5():
             print("home")
             self.close()
             win_home.show()
+            # win_home.showFullScreen()
 
         def f_timeout(self):
-            global switch
-            if switch == 1:
-                img = QPixmap("1.jpg")
+            global data
+            try:
+                img = QPixmap("img{}.png".format(data))
                 img = img.scaled(1020,550)
                 self.q_lb_img.setPixmap(QPixmap(img))
-                switch += 1
-            elif switch == 2:
-                img = QPixmap("2.jpg")
-                img = img.scaled(1020,550)
-                self.q_lb_img.setPixmap(QPixmap(img))
-                switch += 1
-            elif switch == 3:
-                img = QPixmap("3.jpg")
-                img = img.scaled(1020,550)
-                self.q_lb_img.setPixmap(QPixmap(img))
-                switch += 1
-            elif switch == 4:
-                img = QPixmap("1.jpg")
-                img = img.scaled(1020,550)
-                self.q_lb_img.setPixmap(QPixmap(img))
-                switch += 1
-            elif switch == 5:
-                img = QPixmap("2.jpg")
-                img = img.scaled(1020,550)
-                self.q_lb_img.setPixmap(QPixmap(img))
-                switch -= 4
+            except:
+                pass
 
 
     class Window_Manager(QMainWindow, ui_manager) :
@@ -334,7 +316,7 @@ def pyqt5():
             print("home")
             self.close()
             win_home.show()
-            win_home.showFullScreen()
+            # win_home.showFullScreen()
         
         def f_chkb_washonly(self) :
             global mode
@@ -397,6 +379,7 @@ def pyqt5():
             print("home")
             self.close()
             win_home.show()
+            # win_home.showFullScreen()
         
         def f_btn_stop(self) :
             global stop_flag
@@ -417,24 +400,31 @@ def pyqt5():
             self.q_lb_accumulate.setText("{}".format(accumulate))
 
         def f_timeout(self):
-            global level
-            if level == 0:
+            global empty
+            global accumulate
+            global daily
+
+            if empty == 0:
                 img = QPixmap("1111.png")
                 img = img.scaled(330,200)
                 self.q_lb_level.setPixmap(QPixmap(img))
-                level += 1
-            elif level == 1:
+            elif empty == 1:
                 img = QPixmap("2222.png")
                 img = img.scaled(330,200)
                 self.q_lb_level.setPixmap(QPixmap(img))
-                level -= 1
+
+            self.q_lb_daily.setText("{}".format(daily))
+            self.q_lb_accumulate.setText("{}".format(accumulate))
 
     class Window_Stop(QMainWindow, ui_stop) :
         def __init__(self) :
             super().__init__()
             self.setupUi(self)
-            self.setWindowTitle('Stop')
-
+            img = QPixmap("imgstop.png")
+            img = img.scaled(1000, 460)
+            self.q_lb_stop.setPixmap(QPixmap(img))
+            # self.setWindowTitle('Stop')
+            
             # 창 위치
             # qr = self.frameGeometry()
             # cp = QDesktopWidget().availableGeometry().center()
@@ -449,7 +439,7 @@ def pyqt5():
             print("home")
             self.close()
             win_home.show()
-            win_home.showFullScreen()
+            # win_home.showFullScreen()
 
     app = QApplication(sys.argv)
     win_home = Window_Home()
@@ -458,23 +448,24 @@ def pyqt5():
     win_status = Window_Status()
     win_stop = Window_Stop()
     win_home.show()
+    # win_home.showFullScreen()
     app.exec_()
 
 if __name__ == "__main__" :
     # write
-    angle = 10.0
+    angle = 127.0
     cart_size = 0
     mode = 0
     pump = 0
     stop_flag = 0
 
     # read
-    level = 0
-    daily = 10
-    switch = 1
-    
-    accumulate = 20
-    status = deque()
+    data = 0
+    empty = 0
+
+    daily = 0    
+    accumulate = 0
+
     connection = False
     # app = QApplication(sys.argv)
     # win_home = Window_Home()
@@ -486,12 +477,8 @@ if __name__ == "__main__" :
     p1 = threading.Thread(target=opencv4)
     p1.start()
     # p1.join()
-    # p2 = threading.Thread(target=pyqt5)
-    # p2.start()
+    p2 = threading.Thread(target=pyqt5)
+    p2.start()
     # p2.join()
     p3 = threading.Thread(target=serial_run)
     p3.start()
-    # p4 = threading.Thread(target=audio)
-    # p4.start()
-    # while True:
-    #     print(angle, cart_size, mode, pump, stop_flag)

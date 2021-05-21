@@ -86,6 +86,183 @@ int process1 = 0;
 int process2 = 0;
 int process3 = 0;
 
+
+enum LuxSkill {
+    step1,
+    step2,
+    step3,
+    step4
+};
+
+
+switch (skill)
+    {
+    case step1:         // 열거형 값이 LightBinding일 때
+        	Target_Angle3 = 0
+				p_speed == 0;
+				u_speed2 == 0;
+				Target_Omega = 0;
+				Target_Omega2 = 0;
+				b_l_speed = 0;
+				b_r_speed = 0;
+        break;
+    case step2:     // 열거형 값이 PrismaticBarrier일 때
+        
+        break;
+    case step3:    // 열거형 값이 LucentSingularity일 때
+      Tx_data == 3;
+				// 소독을 시작하겠습니다
+
+				// 카트 사이즈 확인하고
+				if (cart_size == 0)
+				{
+					Target_Angle3 = 3;
+				}
+				else if (cart_size == 1)
+				{
+					Target_Angle3 = 5;
+				}
+				// 상단 롤러 다 내려오면
+				if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
+				{
+					Tx_data = 4;
+				}
+        break;
+    case step4:           // 열거형 값이 FinalSpark일 때
+        	Tx_data = 5;
+				// 진행중...
+
+				if (slope < -5)
+				{
+					Target_Omega = 2;
+					Target_Omega2 = 4;
+					u_speed2 = 200;
+				}
+				else if ((-5 <= slope) && (slope <= 5))
+				{
+					Target_Omega = 3;
+					Target_Omega2 = 3;
+					u_speed2 = 200;
+				}
+				else if (5 < slope)
+				{
+					Target_Omega = 4;
+					Target_Omega2 = 2;
+					u_speed2 = 200;
+				}
+				// 앞 롤러들 시작
+				// b_l_speed = 3;
+				// b_r_speed = 3;
+				if (pump == 0)
+				{
+					p_speed = 700;
+				}
+				else if (pump == 1)
+				{
+					p_speed == 800;
+				}
+				else if (pump == 2)
+				{
+					p_speed == 900;
+				}
+				// 펌프 시작
+        break;
+    default:
+        break;
+    }
+
+		if (mode == 0 && stop_flag == 0)
+		{
+			if (Tx_data == 0)
+			{
+			step1;
+			}
+			// 앞 가변저항이 변하면
+			if ((adc1_buffer[0] > 0 || adc1_buffer[1] > 0) && (Tx_data == 0))
+			{
+				step2
+			}
+			// 앞 가변저항이 모두 일정 이상이면
+			else if ((adc1_buffer[0] > 200 && adc1_buffer[1] > 200) && (Tx_data == 1))
+			{
+			step3
+			}
+			// 손잡이 인식하면 인식하면
+			else if ((slope != 127) && (Tx_data == 2 || Tx_data == 3))
+			{
+				step4
+			}
+			// 상단 롤러 내려오면
+			else if (Tx_data == 4 || Tx_data == 5)
+			{
+			step5
+			}
+			// 앞 가변저항 모두 돌아오면
+			if ((adc1_buffer[0] < 10 && adc1_buffer[1] < 10) && Tx_data == 5)
+			{
+				Tx_data = 6;
+				// 나가는중입니다
+				b_l_speed = 3;
+				b_r_speed = 3;
+				// 뒷 롤러들 시작
+				Target_Omega = 0;
+				Target_Omega2 = 0;
+				// 앞 롤러들 멈춤
+				a = 1;
+				u_speed2 = -200;
+				// 위 롤러 반대
+			}
+			// 뒷 가변저항 모두 돌아오면
+			else if ((adc1_buffer[2] < 10 && adc1_buffer[3] < 10) && Tx_data >= 6)
+			{
+				Tx_data = 7;
+				// 소독이 완료되었습니다
+
+				b_l_speed = 0;
+				b_r_speed = 0;
+				u_speed2 = 0;
+				a = 0;
+				Target_Angle3 = 0;
+				// 상단 롤러 다 올라가면
+				if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
+				{
+					Tx_data = 0;
+					// 카트를 넣어주세요			
+				}
+			}
+		}
+		else if (mode == 1 && stop_flag == 0)
+		{
+			Tx_data = 0;
+			a = 0;
+			Target_Angle3 = 0;
+			b_l_speed = 0;
+			b_r_speed = 0;
+			Target_Omega = 0;
+			Target_Omega2 = 0;
+			if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
+				{
+					p_speed == 700;
+					u_speed2 == 200;
+				}
+		}
+		else if (stop_flag == 1)
+		{
+			Tx_data = 0;
+			a = 0;
+			Target_Angle3 = 0;
+			b_l_speed = 0;
+			b_r_speed = 0;
+			Target_Omega = 0;
+			Target_Omega2 = 0;
+			if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
+				{
+					p_speed == 0;
+					u_speed2 == 0;
+				}
+		}
+
+
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 //-----------------------------Controller-------------------------------//
 							//moving average filter//
@@ -355,8 +532,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 	{
 
 		HAL_ADC_Start_DMA(&hadc1, adc1_buffer, 10);
-		if (mode == 0)
+		if (mode == 0 && stop_flag == 0)
 		{
+			if (Tx_data == 8 && (adc1_buffer[0] < 10 && adc1_buffer[1] < 10 && adc1_buffer[2] < 10 && adc1_buffer[3] < 10))
+			{
+				Tx_data = 0;
+			}
+			if (Tx_data == 0)
+			{
+				Target_Angle3 = 0
+				p_speed == 0;
+				u_speed2 == 0;
+				Target_Omega = 0;
+				Target_Omega2 = 0;
+				b_l_speed = 0;
+				b_r_speed = 0;
+			}
 			// 앞 가변저항이 변하면
 			if ((adc1_buffer[0] > 0 || adc1_buffer[1] > 0) && (Tx_data == 0))
 			{
@@ -370,7 +561,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 				// 손잡이를 놓아주세요
 			}
 			// 손잡이 인식하면 인식하면
-			else if ((slope != 127) && (Tx_data == 2))
+			else if ((slope != 127) && (Tx_data == 2 || Tx_data == 3))
 			{
 				Tx_data == 3;
 				// 소독을 시작하겠습니다
@@ -391,39 +582,32 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 				}
 			}
 			// 상단 롤러 내려오면
-			else if (Tx_data >= 4)
+			else if (Tx_data == 4 || Tx_data == 5)
 			{
 				Tx_data = 5;
 				// 진행중...
 
-				if ((slope < -5) && (Tx_data == 5))
+				if (slope < -5)
 				{
 					Target_Omega = 2;
 					Target_Omega2 = 4;
 					u_speed2 = 200;
 				}
-				else if ((-5 <= slope <= 5) && (Tx_data == 5))
+				else if ((-5 <= slope) && (slope <= 5))
 				{
 					Target_Omega = 3;
 					Target_Omega2 = 3;
 					u_speed2 = 200;
 				}
-				else if ((5 < slope) && (Tx_data == 5))
+				else if (5 < slope)
 				{
 					Target_Omega = 4;
 					Target_Omega2 = 2;
 					u_speed2 = 200;
 				}
-				else if (Tx_data >= 6)
-				{
-					Target_Omega = 0;
-					Target_Omega2 = 0;
-					a = 1;
-					u_speed2 = -200;
-				}
-				b_l_speed = 3;
-				b_r_speed = 3;
-				// 옆 롤러들 시작
+				// 앞 롤러들 시작
+				// b_l_speed = 3;
+				// b_r_speed = 3;
 				if (pump == 0)
 				{
 					p_speed = 700;
@@ -443,6 +627,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 			{
 				Tx_data = 6;
 				// 나가는중입니다
+				b_l_speed = 3;
+				b_r_speed = 3;
+				// 뒷 롤러들 시작
+				Target_Omega = 0;
+				Target_Omega2 = 0;
+				// 앞 롤러들 멈춤
+				a = 1;
+				u_speed2 = -200;
+				// 위 롤러 반대
 			}
 			// 뒷 가변저항 모두 돌아오면
 			else if ((adc1_buffer[2] < 10 && adc1_buffer[3] < 10) && Tx_data >= 6)
@@ -463,10 +656,35 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 				}
 			}
 		}
-		else if (mode == 1)
+		else if (mode == 1 && stop_flag == 0)
 		{
-			p_speed == 700;
-			u_speed2 == 200;
+			Tx_data = 0;
+			a = 0;
+			Target_Angle3 = 0;
+			b_l_speed = 0;
+			b_r_speed = 0;
+			Target_Omega = 0;
+			Target_Omega2 = 0;
+			if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
+				{
+					p_speed == 700;
+					u_speed2 == 200;
+				}
+		}
+		else if (stop_flag == 1)
+		{
+			Tx_data = 8;
+			a = 0;
+			Target_Angle3 = 0;
+			b_l_speed = 0;
+			b_r_speed = 0;
+			Target_Omega = 0;
+			Target_Omega2 = 0;
+			if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
+				{
+					p_speed == 0;
+					u_speed2 == 0;
+				}
 		}
 
 /*
