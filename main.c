@@ -65,6 +65,8 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 int dir =0;
 int i=0;
+int i2=0;
+int i3=0;
 int o = 0;
 int duty=0;
 int k =0;
@@ -74,7 +76,7 @@ int cnnt = 0;
 
 int m = 0;
 int n = 0;
-
+int v = 0;
 int h = 0;
 
 int a=0;
@@ -85,185 +87,6 @@ int d=0;
 int process1 = 0;
 int process2 = 0;
 int process3 = 0;
-
-
-enum LuxSkill {
-    step1,
-    step2,
-    step3,
-    step4
-};
-
-
-switch (skill)
-    {
-    case step1:         // 열거형 값이 LightBinding일 때
-        	Target_Angle3 = 0
-				p_speed == 0;
-				u_speed2 == 0;
-				Target_Omega = 0;
-				Target_Omega2 = 0;
-				b_l_speed = 0;
-				b_r_speed = 0;
-        break;
-    case step2:     // 열거형 값이 PrismaticBarrier일 때
-        
-        break;
-    case step3:    // 열거형 값이 LucentSingularity일 때
-      Tx_data == 3;
-				// 소독을 시작하겠습니다
-
-				// 카트 사이즈 확인하고
-				if (cart_size == 0)
-				{
-					Target_Angle3 = 3;
-				}
-				else if (cart_size == 1)
-				{
-					Target_Angle3 = 5;
-				}
-				// 상단 롤러 다 내려오면
-				if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
-				{
-					Tx_data = 4;
-				}
-        break;
-    case step4:           // 열거형 값이 FinalSpark일 때
-        	Tx_data = 5;
-				// 진행중...
-
-				if (slope < -5)
-				{
-					Target_Omega = 2;
-					Target_Omega2 = 4;
-					u_speed2 = 200;
-				}
-				else if ((-5 <= slope) && (slope <= 5))
-				{
-					Target_Omega = 3;
-					Target_Omega2 = 3;
-					u_speed2 = 200;
-				}
-				else if (5 < slope)
-				{
-					Target_Omega = 4;
-					Target_Omega2 = 2;
-					u_speed2 = 200;
-				}
-				// 앞 롤러들 시작
-				// b_l_speed = 3;
-				// b_r_speed = 3;
-				if (pump == 0)
-				{
-					p_speed = 700;
-				}
-				else if (pump == 1)
-				{
-					p_speed == 800;
-				}
-				else if (pump == 2)
-				{
-					p_speed == 900;
-				}
-				// 펌프 시작
-        break;
-    default:
-        break;
-    }
-
-		if (mode == 0 && stop_flag == 0)
-		{
-			if (Tx_data == 0)
-			{
-			step1;
-			}
-			// 앞 가변저항이 변하면
-			if ((adc1_buffer[0] > 0 || adc1_buffer[1] > 0) && (Tx_data == 0))
-			{
-				step2
-			}
-			// 앞 가변저항이 모두 일정 이상이면
-			else if ((adc1_buffer[0] > 200 && adc1_buffer[1] > 200) && (Tx_data == 1))
-			{
-			step3
-			}
-			// 손잡이 인식하면 인식하면
-			else if ((slope != 127) && (Tx_data == 2 || Tx_data == 3))
-			{
-				step4
-			}
-			// 상단 롤러 내려오면
-			else if (Tx_data == 4 || Tx_data == 5)
-			{
-			step5
-			}
-			// 앞 가변저항 모두 돌아오면
-			if ((adc1_buffer[0] < 10 && adc1_buffer[1] < 10) && Tx_data == 5)
-			{
-				Tx_data = 6;
-				// 나가는중입니다
-				b_l_speed = 3;
-				b_r_speed = 3;
-				// 뒷 롤러들 시작
-				Target_Omega = 0;
-				Target_Omega2 = 0;
-				// 앞 롤러들 멈춤
-				a = 1;
-				u_speed2 = -200;
-				// 위 롤러 반대
-			}
-			// 뒷 가변저항 모두 돌아오면
-			else if ((adc1_buffer[2] < 10 && adc1_buffer[3] < 10) && Tx_data >= 6)
-			{
-				Tx_data = 7;
-				// 소독이 완료되었습니다
-
-				b_l_speed = 0;
-				b_r_speed = 0;
-				u_speed2 = 0;
-				a = 0;
-				Target_Angle3 = 0;
-				// 상단 롤러 다 올라가면
-				if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
-				{
-					Tx_data = 0;
-					// 카트를 넣어주세요			
-				}
-			}
-		}
-		else if (mode == 1 && stop_flag == 0)
-		{
-			Tx_data = 0;
-			a = 0;
-			Target_Angle3 = 0;
-			b_l_speed = 0;
-			b_r_speed = 0;
-			Target_Omega = 0;
-			Target_Omega2 = 0;
-			if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
-				{
-					p_speed == 700;
-					u_speed2 == 200;
-				}
-		}
-		else if (stop_flag == 1)
-		{
-			Tx_data = 0;
-			a = 0;
-			Target_Angle3 = 0;
-			b_l_speed = 0;
-			b_r_speed = 0;
-			Target_Omega = 0;
-			Target_Omega2 = 0;
-			if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
-				{
-					p_speed == 0;
-					u_speed2 == 0;
-				}
-		}
-
-
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 //-----------------------------Controller-------------------------------//
 							//moving average filter//
 #define MAF_SIZE 50
@@ -272,7 +95,7 @@ double g_SUM_Data = 0.0;
 double g_MAF_Data = 0.0;
 int g_MAF_CNT  = 0;
 
-#define MAF_SIZE2 100
+#define MAF_SIZE2 50
 double g_rawData2[MAF_SIZE2] = {0,};
 double g_SUM_Data2 = 0.0;
 double g_MAF_Data2 = 0.0;
@@ -284,17 +107,24 @@ double g_SUM_Data3 = 0.0;
 double g_MAF_Data3 = 0.0;
 int g_MAF_CNT3  = 0;
 
+#define MAF_SIZE4 50
+double g_rawData4[MAF_SIZE4] = {0,};
+double g_SUM_Data4 = 0.0;
+double g_MAF_Data4 = 0.0;
+int g_MAF_CNT4  = 0;
+
 							//PWM//
 int speed;
 
-int f_l_speed;	//front left
-int f_r_speed;	//front right
-int u_speed;	//upper
+int f_l_speed = 0;	//front left
+int f_r_speed = 0;	//front right
+int u_speed = 0;	//upper
 
 int p_speed;	//pump
 int b_l_speed;	//back left
 int b_r_speed;	//back right
 int u_speed2;	//upper2
+int LED;
 
 							//Angle//
 							//Upper Side//		//not yet
@@ -310,10 +140,9 @@ volatile float pre_Ang_Error3 = 0.0;
 volatile float Angle3 = 0.0;
 volatile float pre_Angle3 = 0.0;
 volatile float Angle_Control3 = 0.0;
-volatile float Ang_Kp3 = 0.7;
-volatile float Ang_Kd3 = 0.1;
+volatile float Ang_Kp3 = 0.62;				//1.5
+volatile float Ang_Kd3 = 0.001;				//0.1
 volatile float Ang_dt = 0.1;
-volatile float Ang_remove = 1;
 
 							//Speed//
 
@@ -329,8 +158,8 @@ volatile float Omg_Error = 0.0;
 volatile float Omega = 0.0;
 volatile float Omg_Error_I_Sum = 0.0;
 volatile float Omega_Control = 0.0;
-volatile float Omg_Kp = 1.0;
-volatile float Omg_Ki = 0.00000007;
+volatile float Omg_Kp = 1.2;				//1.0		2.4
+volatile float Omg_Ki = 1.15;				//3.0		2.3
 volatile float Omg_Ka;
 volatile float Omg_dt = 0.01;
 
@@ -346,8 +175,8 @@ volatile float Omg_Error2 = 0.0;
 volatile float Omega2 = 0.0;
 volatile float Omg_Error_I_Sum2 = 0.0;
 volatile float Omega_Control2 = 0.0;
-volatile float Omg_Kp2 = 10.0;
-volatile float Omg_Ki2 = 200.0;
+volatile float Omg_Kp2 = 1.2;				//1.0		2.4
+volatile float Omg_Ki2 = 1.15;				//3.0		2.3
 volatile float Omg_Ka2;
 
 							//Upper Side//
@@ -357,8 +186,8 @@ volatile float Omg_Error3 = 0.0;
 volatile float Omega3 = 0.0;
 volatile float Omg_Error_I_Sum3 = 0.0;
 volatile float Omega_Control3 = 0.0;
-volatile float Omg_Kp3 = 1.0;
-volatile float Omg_Ki3 = 0.0000007;
+volatile float Omg_Kp3 = 31.8;				//1.0
+volatile float Omg_Ki3 = 29.7;				//30.0
 volatile float Omg_Ka3;
 
 							//Current//
@@ -370,8 +199,8 @@ volatile float Current_Ref = 0.0;
 volatile float Cur_Error = 0.0;
 volatile float Cur_Error_I_Sum = 0.0;
 volatile float Cur_Control = 0.0;
-volatile float Cur_Kp = 4.0;
-volatile float Cur_Ki = 800.0;
+volatile float Cur_Kp = 0.025;				//1.0		0.05
+volatile float Cur_Ki = 44.0;				//0.3		88.0
 volatile float Motor_CCR = 0.0;
 volatile float dt = 0.001;
 volatile float Cur_Ka;
@@ -385,8 +214,8 @@ volatile float Current_Ref2 = 0.0;
 volatile float Cur_Error2 = 0.0;
 volatile float Cur_Error_I_Sum2 = 0.0;
 volatile float Cur_Control2 = 0.0;
-volatile float Cur_Kp2 = 4.0;
-volatile float Cur_Ki2 = 800.0;
+volatile float Cur_Kp2 = 0.025;				//1.0		0.05
+volatile float Cur_Ki2 = 44.0;				//0.3		88.0
 volatile float Motor_CCR2 = 0.0;
 volatile float Cur_Ka2;
 
@@ -397,132 +226,88 @@ volatile float Current_Ref3 = 0.0;
 volatile float Cur_Error3 = 0.0;
 volatile float Cur_Error_I_Sum3 = 0.0;
 volatile float Cur_Control3 = 0.0;
-volatile float Cur_Kp3 = 1.0;
-volatile float Cur_Ki3 = 0.3;
+volatile float Cur_Kp3 = 0.05;				//4.0 or 1.0
+volatile float Cur_Ki3 = 88.0;				//0.3
 volatile float Motor_CCR3 = 0.0;
 volatile float Cur_Ka3;
-volatile float Cur_remove = 1;
 
 int flag;
 
 							//USART//
 
+volatile int Tx_data = 0;
+
+volatile unsigned char head_pos;
+volatile unsigned char tail_pos;
+volatile unsigned char PacketMode;
+volatile unsigned char checkSize;
+uint8_t rx_dma_buffer[256];
+uint8_t rx_buf[8];
+uint8_t checkSum;
+int f = 0;
+
+volatile int slope = 127;
+volatile int cart_size;
+volatile int mode;
+volatile int pump;
+volatile int stop_flag;
+uint16_t txLen = sizeof(Tx_data) -1;
 void Uart_rx_dma_handler(){
-	head_pos = huart2.RxXferSize - huart2.hdmarx->Instance->NDTR-1;
-	while(tail_pos != head_pos) {
-		switch(PacketMode){
-			case 0:
-				if (rx_dma_buffer[tail_pos] == 0xFF){
-					rx_buf[checkSize++] = rx_dma_buffer[tail_pos];
-					if (checkSize == 2){
-						PacketMode = 1;
-					}
-				}
-				else{
-					checkSize = 0;
-				}
-				break;
-			
-			case 1:
-				rx_buf[checkSize++] = rx_dma_buffer[tail_pos];
-				if (checkSize == 8){
-					for (int i = 3; i < 7; i++)
-						checkSum += rx_buf[i];
-					if (rx_buf[7] == checkSum){
-						// 데이터 저장
-					}
-					else{
-						// 데이터 저장
-					}
-					checkSum = 0;
-					checkSize = 0;
-					PacketMode = 0;
-				}
-				else if (checkSize > 7){
-					checkSum = 0;
-					checkSize = 0;
-					PacketMode = 0;
-				}
-		}
-		tail_pos++;
-	}
+   head_pos = huart2.RxXferSize - huart2.hdmarx->Instance->NDTR-1;
+   while(tail_pos != head_pos) {
+       switch(PacketMode){
+           case 0:
+               if (rx_dma_buffer[tail_pos] == 0xFF){
+                   rx_buf[checkSize++] = rx_dma_buffer[tail_pos];
+                   if (checkSize == 2){
+                       PacketMode = 1;
+                   }
+               }
+               else{
+                   checkSize = 0;
+               }
+               break;
+
+           case 1:
+               rx_buf[checkSize++] = rx_dma_buffer[tail_pos];
+               if (checkSize == 8){
+                   for (int i = 3; i < 7; i++)
+                       checkSum += rx_buf[i];
+                   if (rx_buf[7] == checkSum){
+                	   if ((int)rx_buf[2] >= 128){
+                		   slope = ((int)(rx_buf[2])-128) * (-1);
+                	   }
+                	   else{
+                		   slope = (int)(rx_buf[2]);
+
+                	   }
+
+                	   cart_size = (int)rx_buf[3];
+                	   mode = (int)rx_buf[4];
+					   pump = (int)rx_buf[5];
+					   stop_flag = (int)rx_buf[6];
+					   // Tx_data += 10*sensor(0, 1)
+					   HAL_UART_Transmit(&huart2, &Tx_data, 1, 10);
+
+                   }
+                   else{
+                       // ?��?��?�� ???��
+                   }
+                   checkSum = 0;
+                   checkSize = 0;
+                   PacketMode = 0;
+               }
+               else if (checkSize > 7){
+                   checkSum = 0;
+                   checkSize = 0;
+                   PacketMode = 0;
+               }
+       }
+       tail_pos++;
+   }
 }
 
-uint8_t Tx_data1[] = "1";
-volatile float slope = 0.0;
-//volatile int length;
-//volatile int pump;
-//volatile int mode;
-//volatile int stop;
-uint16_t txLen = sizeof(Tx_data1) -1;
 
-
-							//Blower//
-
-							//Pan//
-
-/*
-							//Cart handle slope - Usart2//
-							//-left Motor-//
-
-float Target_Omega(slope)
-{
-	float Target_L;
-	if(slope > 5)
-		{
-		Target_L = 1;
-		}
-	else if(-5 <= slope <= 5)
-		{
-		Target_L = 2;
-		}
-	else if(slope < -5)
-		{
-		Target_L = 4;
-		}
-	return Target_L;
-}
-							//-right Motor-//
-float Target_Omega2(slope)
-{
-	float Target_R;
-	if(slope > 5)
-		{
-		Target_R = 4;
-		}
-	else if(-5 <= slope <= 5)
-		{
-		Target_R = 2;
-		}
-	else if(slope < -5)
-		{
-		Target_R = 1;
-		}
-	return Target_R;
-}
-*/
-
-/*
-							//Cart handle length - Usart2//
-float Target_Angle(length)
-{
-	float Target_H;
-	float Target_A;
-
-	if(length == 1)						//camera - small -7cm
-	{
-		Target_H = -0.07;
-	}
-	else if(length == 2)				//camera - middle -15cm
-	{
-		Target_H = -0.15;
-	}
-
-	Target_A = Target_H * 360.0 / (2 * 0.15 * 180);		//0.3 = pully r , 1.6 = 10/ pi / 2		rad
-
-	return Target_A;
-}
-*/
 
 										//Timer//
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
@@ -530,43 +315,48 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 				//Control period 1000Hz - Timer9//
 	if(htim == &htim9)
 	{
+		Uart_rx_dma_handler();
 
 		HAL_ADC_Start_DMA(&hadc1, adc1_buffer, 10);
+
+		
 		if (mode == 0 && stop_flag == 0)
 		{
-			if (Tx_data == 8 && (adc1_buffer[0] < 10 && adc1_buffer[1] < 10 && adc1_buffer[2] < 10 && adc1_buffer[3] < 10))
+			if (Tx_data == 8 && (adc1_buffer[0] > 2950 && adc1_buffer[1] < 3600 && adc1_buffer[2] > 2650 && adc1_buffer[3] < 3800))
 			{
 				Tx_data = 0;
 			}
 			if (Tx_data == 0)
 			{
-				Target_Angle3 = 0
+				Target_Angle3 = 0;
 				p_speed == 0;
 				u_speed2 == 0;
 				Target_Omega = 0;
 				Target_Omega2 = 0;
 				b_l_speed = 0;
 				b_r_speed = 0;
+
+				n = 0;			//Cur_Error = 0 -> pwm = 0
 			}
-			// 앞 가변저항이 변하면
-			if ((adc1_buffer[0] > 0 || adc1_buffer[1] > 0) && (Tx_data == 0))
+			// front R changes
+			if ((adc1_buffer[0] < 2950 || adc1_buffer[1] > 3600) && (Tx_data == 0))
 			{
 				Tx_data = 1;
-				// 카트를 더 넣어주세요
+				// put in the cart
 			}
-			// 앞 가변저항이 모두 일정 이상이면
-			else if ((adc1_buffer[0] > 200 && adc1_buffer[1] > 200) && (Tx_data == 1))
+			//front R all enough
+			else if ((adc1_buffer[0] < 2800 && adc1_buffer[1] > 3700) && (Tx_data == 1))
 			{
 				Tx_data = 2;
-				// 손잡이를 놓아주세요
+				// hands off
 			}
-			// 손잡이 인식하면 인식하면
+			// detect handle
 			else if ((slope != 127) && (Tx_data == 2 || Tx_data == 3))
 			{
 				Tx_data == 3;
-				// 소독을 시작하겠습니다
+				// start washing
 
-				// 카트 사이즈 확인하고
+				// check cart size
 				if (cart_size == 0)
 				{
 					Target_Angle3 = 3;
@@ -575,22 +365,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 				{
 					Target_Angle3 = 5;
 				}
-				// 상단 롤러 다 내려오면
+				// upper done
 				if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
 				{
 					Tx_data = 4;
 				}
 			}
-			// 상단 롤러 내려오면
+			// upper done
 			else if (Tx_data == 4 || Tx_data == 5)
 			{
 				Tx_data = 5;
-				// 진행중...
+				// wait...
 
 				if (slope < -5)
 				{
-					Target_Omega = 2;
-					Target_Omega2 = 4;
+					Target_Omega = 1;
+					Target_Omega2 = 2;
 					u_speed2 = 200;
 				}
 				else if ((-5 <= slope) && (slope <= 5))
@@ -601,11 +391,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 				}
 				else if (5 < slope)
 				{
-					Target_Omega = 4;
-					Target_Omega2 = 2;
+					Target_Omega = 2;
+					Target_Omega2 = 1;
 					u_speed2 = 200;
 				}
-				// 앞 롤러들 시작
+				// front start
 				// b_l_speed = 3;
 				// b_r_speed = 3;
 				if (pump == 0)
@@ -620,39 +410,41 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 				{
 					p_speed == 900;
 				}
-				// 펌프 시작
+				// pump start
 			}
-			// 앞 가변저항 모두 돌아오면
-			if ((adc1_buffer[0] < 10 && adc1_buffer[1] < 10) && Tx_data == 5)
+			// front R all return
+			if ((adc1_buffer[0] > 2950 && adc1_buffer[1] < 3600) && Tx_data == 5)
 			{
 				Tx_data = 6;
-				// 나가는중입니다
-				b_l_speed = 3;
-				b_r_speed = 3;
-				// 뒷 롤러들 시작
+				// cart out
+				b_l_speed = 700;
+				b_r_speed = 700;
+				// back start
 				Target_Omega = 0;
 				Target_Omega2 = 0;
-				// 앞 롤러들 멈춤
+				n = 0;			//Cur_Error = 0 -> pwm = 0
+				// front stop
 				a = 1;
 				u_speed2 = -200;
-				// 위 롤러 반대
+				// upper opposite
 			}
-			// 뒷 가변저항 모두 돌아오면
-			else if ((adc1_buffer[2] < 10 && adc1_buffer[3] < 10) && Tx_data >= 6)
+			// back R all returns
+			else if ((adc1_buffer[2] > 2650 && adc1_buffer[3] < 3800) && Tx_data >= 6)
 			{
 				Tx_data = 7;
-				// 소독이 완료되었습니다
+				// washing over
 
 				b_l_speed = 0;
 				b_r_speed = 0;
-				u_speed2 = 0;
 				a = 0;
 				Target_Angle3 = 0;
-				// 상단 롤러 다 올라가면
+				d = 0;				
+				u_speed2 = 0;
+				// upper done
 				if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
 				{
 					Tx_data = 0;
-					// 카트를 넣어주세요			
+					// cart in
 				}
 			}
 		}
@@ -665,6 +457,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 			b_r_speed = 0;
 			Target_Omega = 0;
 			Target_Omega2 = 0;
+			n = 0;				//error = 0
+			m = 0;
 			if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
 				{
 					p_speed == 700;
@@ -680,6 +474,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 			b_r_speed = 0;
 			Target_Omega = 0;
 			Target_Omega2 = 0;
+			n = 0;				//error = 0
+			m = 0;
 			if ((-0.1 < Ang_Error3) && (Ang_Error3 < 0.1))
 				{
 					p_speed == 0;
@@ -687,102 +483,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 				}
 		}
 
-/*
-		if(adc1_buffer[0] < 2600 || adc1_buffer[1] > 4000)
-		{
-			if(adc1_buffer[0] < 2600 && adc1_buffer[1] > 4000) 	//front resistance
-			{
-				process1 = 1;	//front +
-			}
-			else
-			{
-				process1 = 2;	//front one +
-			}
-		}
-		else
-		{
-			process1 = 0;		//front -
-		}
 
-		if(adc1_buffer[2] < 2500 && adc1_buffer[3] > 3900)	//back resistance
-		{
-			process2 = 1;		//back +
-		}
-		else
-		{
-			if(adc1_buffer[2] >= 2500 && adc1_buffer[3] <= 3900)
-			{
-				process2 = 0;		//back -
-			}
-			else
-			{
-				process2 = 2;		//nothing
-			}
-		}
 
-										//System Algorithm//
-
-		if(process1 == 2 && process2 == 0)
-		{
-							//dont start keep going No controller
-			a = 0;
-
-			Target_Omega = 0;
-			Target_Omega2 = 0;
-			Target_Angle3 = 0;
-			b_r_speed = 0;
-			b_l_speed = 0;
-			p_speed = 0;
-			u_speed2 = 0;
-		}
-
-		if(process1 == 1 || process2 == 1)
-		{
-			if(process1 == 0 && process2 == 1)
-			{
-							//only upper dir, back pwm
-				a = 1;
-				Target_Omega = 0;
-				Target_Omega2 = 0;
-				Target_Angle3 = 0;
-				b_r_speed = 672;
-				b_l_speed = 700;
-								//Pump Motor PWM//
-				if(count_sec % 100 == 0)
-				{
-					p_speed = 700;
-				}
-			}
-			else
-			{
-							//Controller and system on
-				//camera - Target_Angle3
-				Target_Angle3 = 3;
-				//Delay 1s?
-				Target_Omega = 4;
-				Target_Omega2 = 4;
-
-				b_r_speed = 0;
-				b_l_speed = 0;
-								//Pump Motor PWM//
-				if(count_sec % 100 == 0)
-				{
-					p_speed = 700;
-				}
-			}
-		}
-		else
-		{
-						//system off
-			Target_Omega = 0;
-			Target_Omega2 = 0;
-			Target_Angle3 = 0;
-			u_speed2 = 0;
-			b_r_speed = 0;
-			b_l_speed = 0;
-			p_speed = 0;
-		}
-*/
 		Omg_Ka = 1/Omg_Kp;
 		Omg_Ka2 = 1/Omg_Kp2;
 		Omg_Ka3 = 1/Omg_Kp3;
@@ -799,34 +501,29 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
  	 	 	 	 	 	 	 //Upper roller Position Controller//
 		if(count_sec % 100 == 0)			//10Hz
 		{
-
-
 			Angle3 = linear_enc3 * 0.002416;   //rad	360 / 5200 * pi /180
 
-
-			if(adc1_buffer[7] > 2500 || adc1_buffer[8] > 2500)			//psd
+			if(adc1_buffer[7] > 3000 || adc1_buffer[8] > 3000)			//psd
 			{
 				d = 1;
 				Target_Angle3 -= 0.2;
 			}
 
-						/////
-			if((Ang_Error3 > 0 && Ang_Error3 < 0.1) || (Ang_Error3 < 0 && Ang_Error3 > -0.1))
-			{
-				h++;
-				Ang_remove = 0;
-			}
-			else
-			{
-				Ang_remove = 1;
-			}
-						/////
+			Ang_Error3 = (Target_Angle3 - Angle3);
 
-			Ang_Error3 = (Target_Angle3 - Angle3) * Ang_remove;
-
-			Angle_Control3 = (Ang_Kp3 * Ang_Error3) + Ang_Kd3 * (Ang_Error3 - pre_Ang_Error3) * 10;		//why?? dt? Ang_dt?
+			Angle_Control3 = (Ang_Kp3 * Ang_Error3) + Ang_Kd3 * (Ang_Error3 - pre_Ang_Error3) * 10;//why?? dt? Ang_dt?
 
 			pre_Ang_Error3 = Ang_Error3;
+
+			if(Angle_Control3 > 3.0)
+			{
+				Angle_Control3 = 3.0;
+			}
+			else if(Angle_Control3 < -3.0)
+			{
+				Angle_Control3 = -3.0;
+			}
+
 		}
 
 
@@ -858,67 +555,67 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 
 			pre_enc = enc;
 
-			Omg_Error = Target_Omega - Omega;
+			Omg_Error = (Target_Omega - Omega) * n;
 
 			Omg_Error_I_Sum += Omg_Error;
 
-			Omega_Control = Omg_Kp * Omg_Error + Omg_Ki * Omg_Error_I_Sum * dt;		//why?? Error_I_Sum
+			Omega_Control = Omg_Kp * Omg_Error + Omg_Ki * Omg_Error_I_Sum * 0.01;	// dt;		//why?? Error_I_Sum
 
-			if(Omega_Control > 1.5)
+			if(Omega_Control > 2.0)
 			{
-				Omg_Error_I_Sum -= Omg_Ka * (Omega_Control - 1.5);
-				Omega_Control = 1.5;
+				Omg_Error_I_Sum -= Omg_Ka * (Omega_Control - 2.0);
+				Omega_Control = 2.0;
 			}
-			else if(Omega_Control < -1.5)
+			else if(Omega_Control < -2.0)
 			{
-				Omg_Error_I_Sum -= Omg_Ka * (Omega_Control + 1.5);
-				Omega_Control = -1.5;
+				Omg_Error_I_Sum -= Omg_Ka * (Omega_Control + 2.0);
+				Omega_Control = -2.0;
 			}
 
 
 
 							//Motor2- Right side roller Speed//
 
-			linear_enc2 = enc2 + dif_linear_enc2;		//8? 2degree
+			linear_enc2 = (-1)*(enc2 + dif_linear_enc2);		//8? 2degree
 
 			Omega2 = ((linear_enc2 - pre_linear_enc2) * 0.895); //where dt  = 0.01 = 1ms		rad/s 0.445	 878
 
+			pre_linear_enc2 = linear_enc2;
+
 			enc_diff2 = enc2 - pre_enc2;
-
-			if(enc_diff2 < -60000)
-			{
-
-				i ++;			//different
-
-				dif_linear_enc2 = 65535 * i;
-
-			}
 
 			if(enc_diff2 > 60000)
 			{
 
-				i ++;
+				i2 ++;
 
-				dif_linear_enc2 = 65535 * (-1) * i;
+				dif_linear_enc2 = 65535 * (-1) * i2;
 
 			}
 
+			if(enc_diff2 < -60000)
+			{
+
+				i2 ++;			//different
+
+				dif_linear_enc2 = 65535 * i2;
+
+			}
+
+
 			pre_enc2 = enc2;
 
-
-			Omg_Error2 = Target_Omega2 - Omega2;
+			Omg_Error2 = (Target_Omega2 - Omega2) * n;
 
 			Omg_Error_I_Sum2 += Omg_Error2;
 
-			pre_linear_enc2 = linear_enc2;
-
-			Omega_Control2 = Omg_Kp2 * Omg_Error2 + Omg_Ki2 * Omg_Error_I_Sum2 * dt;		//why?? Error_I_Sum
+			Omega_Control2 = Omg_Kp2 * Omg_Error2 + Omg_Ki2 * Omg_Error_I_Sum2 * 0.01; // * dt;		//why?? Error_I_Sum
 
 
-			if(Omega_Control2 > 1.5)
+			if(Omega_Control2 > 2.0)
 			{
-				Omg_Error_I_Sum2 -= Omg_Ka2 * (Omega_Control2 - 1.5);
-				Omega_Control2 = 1.5;
+				Omg_Error_I_Sum2 -= Omg_Ka2 * (Omega_Control2 - 2.0);
+				Omega_Control2 = 2.0;
 			}
 			/*
 			if(Omega_Control2 > 0.0)
@@ -927,10 +624,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 				Omega_Control2 = 0.0;
 			}*/
 
-			else if(Omega_Control2 < -1.5)
+			else if(Omega_Control2 < -2.0)
 			{
-				Omg_Error_I_Sum2 -= Omg_Ka2 * (Omega_Control2 + 1.5);
-				Omega_Control2 = -1.5;
+				Omg_Error_I_Sum2 -= Omg_Ka2 * (Omega_Control2 + 2.0);
+				Omega_Control2 = -2.0;
 			}
 
 
@@ -945,18 +642,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 
 			if(enc_diff3 < -60000)
 			{
-				i ++;
-				dif_linear_enc3 = 65535 * i;
+				i3 ++;
+				dif_linear_enc3 = 65535 * i3;
 			}
 			if(enc_diff3 > 60000)
 			{
-				i ++;
-				dif_linear_enc3 = 65535 * (-1) * i;
+				i3 ++;
+				dif_linear_enc3 = 65535 * (-1) * i3;
 			}
 
 			pre_enc3 = enc3;
 
-			Omega_ref3 = Angle_Control3; //Angle_Control3;
+			Omega_ref3 = Angle_Control3; //Angle_Control3; //Target_Omeaga3
 
 			Omg_Error3 = Omega_ref3 - Omega3;
 
@@ -964,7 +661,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 
 			pre_linear_enc3 = linear_enc3;
 
-			Omega_Control3 = Omg_Kp3 * Omg_Error3 + Omg_Ki3 * Omg_Error_I_Sum3 * dt;		//why?? Error_I_Sum
+			Omega_Control3 = Omg_Kp3 * Omg_Error3 + Omg_Ki3 * Omg_Error_I_Sum3 * 0.001;	//dt	//why?? Error_I_Sum
 
 			if(Omega_Control3 > 1.0)
 			{
@@ -977,200 +674,203 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 				Omega_Control3 = -1.0;
 			}
 
-
-
 		}		//if
 
 
-		if(count_sec % 10 == 0)			//200Hz
+
+						//Motor1 - Left side roller Current//
+		/*
+		if(Target_Omega != 0)
 		{
-							//Motor1 - Left side roller Current//
-			/*
-			if(Target_Current2 != 0)
-			{
-				g_MAF_CNT2 = (g_MAF_CNT2+1)% MAF_SIZE2 ;
-				g_rawData2[g_MAF_CNT2 ] = adc1_buffer[5];
-				g_SUM_Data2 = 0.0;
-				for(int l=0; l<MAF_SIZE2; l++)
-				g_SUM_Data2 += g_rawData2[l];
-				g_MAF_Data2 = g_SUM_Data2 / MAF_SIZE2;
+			g_MAF_CNT = (g_MAF_CNT+1)% MAF_SIZE ;
+			g_rawData[g_MAF_CNT ] = adc1_buffer[4];
+			g_SUM_Data = 0.0;
+			for(int m=0; m<MAF_SIZE; m++)
+			g_SUM_Data += g_rawData[m];
+			g_MAF_Data = g_SUM_Data / MAF_SIZE;
 
-				n = 1;
-			}*/		//////////////////////
-			/*
-			if(Target_Omega2 != 0)
-			{
-				g_MAF_CNT2 = (g_MAF_CNT2+1)% MAF_SIZE2 ;
-				g_rawData2[g_MAF_CNT2 ] = adc1_buffer[5];
-				g_SUM_Data2 = 0.0;
-				for(int l=0; l<MAF_SIZE2; l++)
-				g_SUM_Data2 += g_rawData2[l];
-				g_MAF_Data2 = g_SUM_Data2 / MAF_SIZE2;
+			n = 1;
+		}*/		//////////////////////
+		/*
+		if(Target_Omega2 != 0)
+		{
+			g_MAF_CNT2 = (g_MAF_CNT2+1)% MAF_SIZE2 ;
+			g_rawData2[g_MAF_CNT2 ] = adc1_buffer[5];
+			g_SUM_Data2 = 0.0;
+			for(int l=0; l<MAF_SIZE2; l++)
+			g_SUM_Data2 += g_rawData2[l];
+			g_MAF_Data2 = g_SUM_Data2 / MAF_SIZE2;
 
-				n = 1;
-			}	*/	//////////////////////
-
-			if(Target_Current3 != 0)
-			{
-				g_MAF_CNT3 = (g_MAF_CNT3+1)% MAF_SIZE3 ;
-				g_rawData3[g_MAF_CNT3 ] = adc1_buffer[6];
-				g_SUM_Data3 = 0.0;
-				for(int j=0; j<MAF_SIZE3; j++)
-				g_SUM_Data3 += g_rawData3[j];
-				g_MAF_Data3 = g_SUM_Data3 / MAF_SIZE3;
-
-				m = 1;
-			}		//////////////////////
+			n = 1;
+		}	*/	//////////////////////
 
 
+		if(Target_Omega != 0 && Target_Omega2 != 0)
+		{
+			g_MAF_CNT = (g_MAF_CNT+1)% MAF_SIZE ;
+			g_rawData[g_MAF_CNT ] = adc1_buffer[4];
+			g_SUM_Data = 0.0;
+			for(int m=0; m<MAF_SIZE; m++)
+			g_SUM_Data += g_rawData[m];
+			g_MAF_Data = g_SUM_Data / MAF_SIZE;
 
-			if(Target_Omega != 0 && Target_Omega2 != 0)
-			{
-				g_MAF_CNT = (g_MAF_CNT+1)% MAF_SIZE ;
-				g_rawData[g_MAF_CNT ] = adc1_buffer[4];
-				g_SUM_Data = 0.0;
-				for(int m=0; m<MAF_SIZE; m++)
-				g_SUM_Data += g_rawData[m];
-				g_MAF_Data = g_SUM_Data / MAF_SIZE;
+			g_MAF_CNT2 = (g_MAF_CNT2+1)% MAF_SIZE2 ;
+			g_rawData2[g_MAF_CNT2 ] = adc1_buffer[5];
+			g_SUM_Data2 = 0.0;
+			for(int l=0; l<MAF_SIZE2; l++)
+			g_SUM_Data2 += g_rawData2[l];
+			g_MAF_Data2 = g_SUM_Data2 / MAF_SIZE2;
 
-				g_MAF_CNT2 = (g_MAF_CNT2+1)% MAF_SIZE2 ;
-				g_rawData2[g_MAF_CNT2 ] = adc1_buffer[5];
-				g_SUM_Data2 = 0.0;
-				for(int l=0; l<MAF_SIZE2; l++)
-				g_SUM_Data2 += g_rawData2[l];
-				g_MAF_Data2 = g_SUM_Data2 / MAF_SIZE2;
-
-				n = 1;
-			}
-
-			/*
-			if(Target_Angle3 != 0)
-			{
-				g_MAF_CNT3 = (g_MAF_CNT3+1)% MAF_SIZE3 ;
-				g_rawData3[g_MAF_CNT3 ] = adc1_buffer[6];
-				g_SUM_Data3 = 0.0;
-				for(int j=0; j<MAF_SIZE3; j++)
-				g_SUM_Data3 += g_rawData3[j];
-				g_MAF_Data3 = g_SUM_Data3 / MAF_SIZE3;
-
-				m = 1;
-			}*/
-
-			Cur_Cur = (((g_MAF_Data * 3.3) / 4095.0) - 2.5 * n)/ 0.4 + 1.9 * n ;			//2.5V 400mA
-			//Cur_Cur = (V - (2.5 * n)) * 10 - 0.178 ; 		//////////////////
-
-			//Cur_Cur = ((g_MAF_Data * 3.0 / 4096.0) - (1.5 * n)); //  * 10.0;
-
-			Current_Ref = Omega_Control; //Target_Current;				//Omega_Control;
-
-			Cur_Error = Current_Ref - Cur_Cur;
-
-			Cur_Error_I_Sum += Cur_Error;
-
-			Cur_Control = (Cur_Kp * Cur_Error + Cur_Ki * Cur_Error_I_Sum * dt + 0.0153125 * Omega);
-
-			if(Cur_Control > 12.0)
-			{
-				Cur_Error_I_Sum -= Cur_Ka * (Cur_Control - 12.0);
-				Cur_Control = 12.0;
-			}
-			else if(Cur_Control < 0.0)
-			{
-				Cur_Error_I_Sum -= Cur_Ka * (Cur_Control);
-				Cur_Control = 0.0;
-			}
-
-			Motor_CCR = Cur_Control;
-			f_l_speed = Motor_CCR * 1000 / 12;
-			//TIM1->CCR1 = f_l_speed;							//left motor
-
-
-							//Motor2 - Right side roller Current//
-
-			Cur_Cur2 = (((-1) * (g_MAF_Data2 * 3.3) / 4095.0) + 2.5 * n)/ 0.4 - 0.1 * n; // + 0.3 * n;			//2.5V 400mA
-
-			//Cur_Cur2 = ((g_MAF_Data2 - 2048.0 * n) * 3.3) / 4095.0/ 0.4;			//400mA
-
-			//Cur_Cur2 = ((g_MAF_Data2 * 3.0 / 4096.0) - (2.3 * n)); //  * 10.0;
-
-			Current_Ref2 = Omega_Control2;			//Omega_Control2	//Target_Current2
-
-			Cur_Error2 = Current_Ref2 - Cur_Cur2;
-
-			Cur_Error_I_Sum2 += Cur_Error2;
-
-			Cur_Control2 = Cur_Kp2 * Cur_Error2 + Cur_Ki2 * Cur_Error_I_Sum2 * dt + 0.0153125 * Omega2;
-
-			if(Cur_Control2 > 0.0)
-			{
-				Cur_Error_I_Sum2 -= Cur_Ka2 * (Cur_Control2);
-				Cur_Control2 = 0.0;
-			}
-			else if(Cur_Control2 < -12.0)
-			{
-				Cur_Error_I_Sum2 -= Cur_Ka2 * (Cur_Control2 + 12.0);
-				Cur_Control2 = -12.0;
-			}
-
-			Motor_CCR2 = Cur_Control2;
-			f_r_speed = Motor_CCR2 * 1000 / 12;
-			//TIM1->CCR2 = f_r_speed;
-
-
-
-							//Motor3 - Upper roller Current//
-
-			if(Ang_Error3 == 0)
-			{
-				Cur_remove = 0;
-			}
-			else
-			{
-				Cur_remove = 1;
-			}
-
-			Cur_Cur3 = (((g_MAF_Data3 * 3.3) / 4095.0) - 2.5 * n)/ 0.4;			//2.5V 400mA
-
-			//Cur_Cur3 = ((g_MAF_Data3 - 2048.0 * m) * 3.3) / 4095.0/ 0.4;			//400mA
-
-			//Cur_Cur3 = ((g_MAF_Data3 * 3.0 / 4096.0) - (1.55 * m)); // * 10.0;
-
-			Current_Ref3 = Target_Current3;				//Omega_Control3 //Target_Current3
-
-			Cur_Error3 = (Current_Ref3 - Cur_Cur3) * Cur_remove;
-
-			Cur_Error_I_Sum3 += Cur_Error3;
-
-			Cur_Control3 = Cur_Kp3 * Cur_Error3 + Cur_Ki3 * Cur_Error_I_Sum3 * dt + 0.0153125 * Omega3;
-
-			if(Cur_Control3 > 12.0)
-			{
-				Cur_Error_I_Sum3 -= Cur_Ka3 * (Cur_Control3 - 12.0);
-				Cur_Control3 = 12.0;
-			}
-			else if(Cur_Control3 < -12.0)
-			{
-				Cur_Error_I_Sum3 -= Cur_Ka3 * (Cur_Control3 + 12.0);
-				Cur_Control3 = -12.0;
-			}
-
-			Motor_CCR3 = Cur_Control3;
-			u_speed = Motor_CCR3 * 1000 / 12;
-			TIM1->CCR3 = u_speed;
+			n = 1;
 		}
+
+
+		Cur_Cur = ((g_MAF_Data * 3.3 / 4095.0) - 2.5 * n)/ 0.4 + 2.0 * n ;			//2.5V 400mA
+
+		//Cur_Cur = (V - (2.5 * n)) * 10 - 0.178 ; 		//////////////////
+
+		Current_Ref = Omega_Control; //Target_Current;				//Omega_Control;
+
+		Cur_Error = Current_Ref - Cur_Cur;
+
+		Cur_Error_I_Sum += Cur_Error;
+
+		Cur_Control = (Cur_Kp * Cur_Error + Cur_Ki * Cur_Error_I_Sum * dt + 0.0153125 * Omega);
+
+		if(Cur_Control > 12.0)
+		{
+			Cur_Error_I_Sum -= Cur_Ka * (Cur_Control - 12.0);
+			Cur_Control = 12.0;
+		}
+		else if(Cur_Control < 0.0)
+		{
+			Cur_Error_I_Sum -= Cur_Ka * (Cur_Control);
+			Cur_Control = 0.0;
+		}
+
+		Motor_CCR = Cur_Control;
+		f_l_speed = Motor_CCR * 1000 / 12;
+		TIM1->CCR1 = f_l_speed;							//left motor
+
+
+						//Motor2 - Right side roller Current//
+
+		//Cur_Cur2 = (2.5 * n - (g_MAF_Data2 * 3.3 / 4095.0))/ 0.4 - 0.3 * n;  // - 0.5 * n; // + 0.3 * n;			//2.5V 400mA
+
+		Cur_Cur2 = ((g_MAF_Data2 * 3.3 / 4095.0) - 2.5 * n)/ 0.4;// + 2.0 * n ;			//2.5V 400mA
+		//Cur_Cur2 = ((g_MAF_Data2 - 2048.0 * n) * 3.3) / 4095.0/ 0.4;			//400mA
+
+		Current_Ref2 = Omega_Control2;			//Omega_Control2	//Target_Current2
+
+		Cur_Error2 = Current_Ref2 - Cur_Cur2;
+
+		Cur_Error_I_Sum2 += Cur_Error2;
+
+		Cur_Control2 = Cur_Kp2 * Cur_Error2 + Cur_Ki2 * Cur_Error_I_Sum2 * dt + 0.0153125 * Omega2;
+
+		if(Cur_Control2 > 12.0)
+		{
+			Cur_Error_I_Sum2 -= Cur_Ka2 * (Cur_Control2 - 12.0);
+			Cur_Control2 = 12.0;
+		}
+		else if(Cur_Control2 < 0.0)
+		{
+			Cur_Error_I_Sum2 -= Cur_Ka2 * (Cur_Control2);
+			Cur_Control2 = 0.0;
+		}
+
+		Motor_CCR2 = Cur_Control2;
+		f_r_speed = Motor_CCR2 * 1000 / 12;
+		TIM1->CCR2 = f_r_speed;
+
+
+						//Motor3 - Upper roller Current//
+
+		/*
+		if(Target_Omega3 != 0)
+		{
+			g_MAF_CNT3 = (g_MAF_CNT3+1)% MAF_SIZE3 ;
+			g_rawData3[g_MAF_CNT3 ] = adc1_buffer[6];
+			g_SUM_Data3 = 0.0;
+			for(int j=0; j<MAF_SIZE3; j++)
+			g_SUM_Data3 += g_rawData3[j];
+			g_MAF_Data3 = g_SUM_Data3 / MAF_SIZE3;
+
+			v = 1;
+		}*/		//////////////////////
+
+		if(Target_Angle3 != 0)
+		{
+			g_MAF_CNT3 = (g_MAF_CNT3+1)% MAF_SIZE3 ;
+			g_rawData3[g_MAF_CNT3 ] = adc1_buffer[6];
+			g_SUM_Data3 = 0.0;
+			for(int j=0; j<MAF_SIZE3; j++)
+			g_SUM_Data3 += g_rawData3[j];
+			g_MAF_Data3 = g_SUM_Data3 / MAF_SIZE3;
+
+			v = 1;
+		}
+
+		if(d == 0)
+		{
+			Cur_Cur3 = ((((g_MAF_Data3 * 3.3) / 4095.0) - 2.5 * v) / 0.4) + 2.3 * v;			//400mA
+		}
+		else
+		{
+			Cur_Cur3 = (((((-1.0) * g_MAF_Data3 * 3.3) / 4095.0) + 2.5 * v) / 0.4) - 2.8 * v;			//400mA
+		}
+
+		//Cur_Cur3 = ((g_MAF_Data3 - 2048.0 * m) * 3.3) / 4095.0/ 0.4;			//400mA
+
+		Current_Ref3 = Omega_Control3;				//Omega_Control3 //Target_Current3
+
+		Cur_Error3 = (Current_Ref3 - Cur_Cur3); // * Cur_remove;
+
+		Cur_Error_I_Sum3 += Cur_Error3;
+
+		Cur_Control3 = Cur_Kp3 * Cur_Error3 + Cur_Ki3 * Cur_Error_I_Sum3 * dt + 0.0153125 * Omega3;
+
+		if(Cur_Control3 > 12.0)
+		{
+			Cur_Error_I_Sum3 -= Cur_Ka3 * (Cur_Control3 - 12.0);
+			Cur_Control3 = 12.0;
+		}
+		else if(Cur_Control3 < -12.0)
+		{
+			Cur_Error_I_Sum3 -= Cur_Ka3 * (Cur_Control3 + 12.0);
+			Cur_Control3 = -12.0;
+		}
+
+		Motor_CCR3 = Cur_Control3;
+
+		if(Motor_CCR3 < 0 && d == 0)		//
+		{
+			Motor_CCR3 = 0;
+		}
+		else if(Motor_CCR3 > 0 && d == 1)	//
+		{
+			Motor_CCR3 = 0;
+		}
+		else
+		{
+			Motor_CCR3 = Cur_Control3;
+		}
+
+		u_speed = Motor_CCR3 * 1000 / 12;
+		TIM1->CCR3 = u_speed;
 
 
 
 						//Motor rotation direction//
 
-		//a = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);
+		a = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);			//B12
 		b = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13);
 		c = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14);
-		d = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15);
+		//d = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15);
 
 		if(a == 0)
 		{
-		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);			//u2
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);			//u2 - A12 			//pan - C11  			//blower - C12
 		}
 		else if(a == 1)
 		{
@@ -1179,25 +879,25 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 
 		if(b == 0)
 		{
-		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 1);			//f_l
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 1);			//f_l - C13
 		}
 		else if(b == 1)
 		{
 		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 0);
 		}
 
-		if(c == 0)
+		if(c == 0)			// 0 1
 		{
-		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 0);			//f_r
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 0);			//f_r - C14
 		}
 		else if(c == 1)
 		{
 		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
 		}
 
-		if(d == 0)
+		if(d == 0)			//d 1 0
 		{
-		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 1);			//u
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 1);			//u -C15   1 - down 0 - up
 		}
 		else if(d == 1)
 		{
@@ -1223,10 +923,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 	//TIM1->CCR1 = f_l_speed;
 	//TIM1->CCR2 = f_r_speed;
 
+	TIM1->CCR4 = u_speed2;
 	TIM8->CCR1 = b_l_speed;
 	TIM8->CCR2 = b_r_speed;
-	TIM8->CCR3 = u_speed2;
-	TIM8->CCR4 = p_speed;
+	TIM8->CCR3 = p_speed;
+	TIM8->CCR4 = LED;
 
 }
 
@@ -1272,7 +973,8 @@ int main(void)
   MX_TIM9_Init();
   /* USER CODE BEGIN 2 */
 
-  // HAL_UART_Receive_IT(&huart2, (uint8_t*)Rx_data, 8);
+  HAL_UART_Receive_DMA(&huart2, rx_dma_buffer, 8);
+  // HAL_UART_Receive_IT(&huart2, (uint8_t*)Rx_data, 10);
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -1297,7 +999,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	
+
     /* USER CODE BEGIN 3 */
 
   }
@@ -1357,13 +1059,20 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-// void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
-// {
-// 	HAL_UART_Transmit(&huart2, (uint8_t*)Tx_data1, txLen,10);
-// 	for (int i = 0; i < 8; i++) push(Rx_data[i]);
-// 	HAL_UART_Receive_IT(&huart2, (uint8_t*)Rx_data, 8);
-// }
+//void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
+//{
+//	HAL_UART_Transmit(&huart2, (uint8_t*)Tx_data1, txLen,10);
+//	slope = atof(Rx_data);			//-180~+180 degree
+//	HAL_UART_Receive_IT(&huart2, (uint8_t*)Rx_data, 10);
+//}
 
+/*
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+	f = 1;
+}
+
+*/
 /* USER CODE END 4 */
 
 /**
