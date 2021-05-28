@@ -78,7 +78,7 @@ def serial_run():
             try:
                 res = ser.readline()
                 data = int.from_bytes(res, byteorder = 'little')
-                if ((data % 10) != data_pre) and (0 <= (data % 10) <= 7):
+                if ((data % 10) != data_pre) and (0 <= (data % 10) <= 8):
                     data_pre = (data % 10)
                     print(data_pre)
                     if data_pre == 7:
@@ -156,7 +156,7 @@ def opencv4():
 
     while cv2.waitKey(33) != ord('q'):
         ret, frame = capture.read()
-        cv2.imshow("VideoFrame", frame)
+        # cv2.imshow("VideoFrame", frame)
         height, width, channel = frame.shape
 
         low = [7, 20, 190]
@@ -174,13 +174,13 @@ def opencv4():
         cv2.imshow("img_masked", img_masked)
 
         img_blur = Blurring(img_masked, blur)
-        cv2.imshow('img_blur', img_blur)
+        # cv2.imshow('img_blur', img_blur)
 
         img_binary = Grayscale(img_blur, g_scale)
         cv2.imshow('img_binary', img_binary)
 
         contours, img_contour = draw_Contours(img_binary, height, width, channel)
-        cv2.imshow('contours', img_contour)
+        # cv2.imshow('contours', img_contour)
 
         img_contourBox, angle, cart_size = draw_ContourBox(contours, 300, 3, frame)
         cv2.imshow('img_contourBox', img_contourBox)
@@ -459,7 +459,7 @@ if __name__ == "__main__" :
     cart_size = 0
     mode = 0
     pump = 0
-    stop_flag = 0
+    stop_flag = 1
 
     # read
     data = 0
