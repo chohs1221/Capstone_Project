@@ -1,6 +1,7 @@
 from playsound import playsound
+import threading
 for i in range(3):
-    playsound("./audios/cartout.wav")
+    threading.Thread(target=playsound, args=('./audios/cartout.wav',), daemon=False).start()
     print("{}out".format(i))
-    playsound("./audios/cartin.wav")
+    threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
     print("{}in".format(i))

@@ -45,6 +45,9 @@
     <property name="cursor">
      <cursorShape>BlankCursor</cursorShape>
     </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="text">
      <string>Home</string>
     </property>
@@ -62,8 +65,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources>
-  <include location="resource.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

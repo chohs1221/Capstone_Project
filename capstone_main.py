@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 import time
 import threading
@@ -14,38 +16,38 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5 import uic
 from PyQt5.QtGui import *
-import resource_rc
+# from ui_workspace import resource_rc
 
 
 def audio(num):
     try:
         if num == 0:
             print(0)
-            playsound("cartin.wav")
+            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
         elif num == 1:
             print(1)
-            playsound("cartout.wav")
+            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
         elif num == 2:
             print(2)
-            playsound("cartin.wav")
+            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
         elif num == 3:
             print(3)
-            playsound("cartout.wav")
+            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
         # elif num == 4:
         #     print(4)
         #     playsound("cartout.wav")
         elif num == 5:
             print(5)
-            playsound("cartin.wav")
+            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
         elif num == 6:
             print(6)
-            playsound("cartout.wav")
+            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
         elif num == 7:
             print(7)
-            playsound("cartin.wav")
+            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
         elif num == 8:
             print(8)
-            playsound("cartin.wav")
+            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
         else:
             pass
     except:
@@ -107,7 +109,10 @@ def serial_run():
                     sign = 0b10000000
                 # 0xff, 0xff, 부호+각도, 01?, 01?, 012?, 01?, 01234 => 8byte
                 checksum = cart_size + mode + pump + stop_flag
-                ser.write([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum])
+                if data_pre == 0 or data == 8:
+                    ser.write([255, 255, sign, cart_size, mode, pump, stop_flag, checksum])
+                else:
+                    ser.write([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum])
                 # print(bytearray([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum]))
             except:
                 print("ser.write() error!!")
@@ -476,8 +481,8 @@ if __name__ == "__main__" :
     # win_status = Window_Status()
     # win_stop = Window_Stop()
     # win_home.show()
-    p1 = threading.Thread(target=opencv4)
-    p1.start()
+    # p1 = threading.Thread(target=opencv4)
+    # p1.start()
     p2 = threading.Thread(target=pyqt5)
     p2.start()
     p3 = threading.Thread(target=serial_run)

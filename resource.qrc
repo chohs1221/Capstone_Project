@@ -1,7 +1,0 @@
-<RCC>
-  <qresource prefix="btn">
-    <file>111.png</file>
-    <file>11.png</file>
-    <file>12.png</file>
-  </qresource>
-</RCC>

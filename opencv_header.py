@@ -64,7 +64,8 @@ def draw_ContourBox(contours, min_width, min_ratio, src):
     return src, angle, cart_size
 
 if __name__ == "__main__":
-    img = cv2.imread('1.jpg')
+    img = cv2.imread('./images/1.jpg')
+    img = cv2.resize(img, dsize=(800, 600), interpolation=cv2.INTER_AREA)
     height, width, channel = img.shape
     cv2.imshow('original', img)
 
@@ -74,7 +75,7 @@ if __name__ == "__main__":
     cv2.imshow('img_binary', img_binary)
     contours, img_contour = draw_Contours(img_binary, height, width, channel)
     cv2.imshow('contours', img_contour)
-    img_contourBox = draw_ContourBox(img_contour, contours, 300, 3, height, width, channel)
+    img_contourBox, angle, cart_size = draw_ContourBox(contours, 300, 3, img)
     cv2.imshow('img_contourBox', img_contourBox)
 
     cv2.waitKey(0)
