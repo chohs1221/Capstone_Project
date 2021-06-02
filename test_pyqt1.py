@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5 import uic
 from PyQt5.QtGui import *
-import resource_rc
 
 #UI파일 연결
 ui_home = uic.loadUiType("./ui_workspace/home.ui")[0]

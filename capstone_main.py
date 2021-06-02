@@ -20,36 +20,9 @@ from PyQt5.QtGui import *
 
 
 def audio(num):
+    audio_name = './audios/audio' + str(num) + '.wav'
     try:
-        if num == 0:
-            print(0)
-            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
-        elif num == 1:
-            print(1)
-            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
-        elif num == 2:
-            print(2)
-            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
-        elif num == 3:
-            print(3)
-            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
-        # elif num == 4:
-        #     print(4)
-        #     playsound("cartout.wav")
-        elif num == 5:
-            print(5)
-            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
-        elif num == 6:
-            print(6)
-            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
-        elif num == 7:
-            print(7)
-            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
-        elif num == 8:
-            print(8)
-            threading.Thread(target=playsound, args=('./audios/cartin.wav',), daemon=False).start()
-        else:
-            pass
+        threading.Thread(target=playsound, args=(audio_name,), daemon=False).start()
     except:
         pass
 
@@ -73,13 +46,14 @@ def serial_run():
     global data
     global empty
     
-    data_pre = 0
+    data_pre = 8
     while True:
         if connection:
             # read
             try:
                 res = ser.readline()
                 data = int.from_bytes(res, byteorder = 'little')
+                empty = data // 10
                 if ((data % 10) != data_pre) and (0 <= (data % 10) <= 8):
                     data_pre = (data % 10)
                     print(data_pre)
@@ -87,6 +61,7 @@ def serial_run():
                         accumulate += 1
                         daily += 1
                     audio(num = (data % 10))
+                
                 if (data // 10) == 0:
                     empty = 0
                 elif (data // 10) == 1:
@@ -110,7 +85,7 @@ def serial_run():
                 # 0xff, 0xff, 부호+각도, 01?, 01?, 012?, 01?, 01234 => 8byte
                 checksum = cart_size + mode + pump + stop_flag
                 if data_pre == 0 or data == 8:
-                    ser.write([255, 255, sign, cart_size, mode, pump, stop_flag, checksum])
+                    ser.write([255, 255, 127, cart_size, mode, pump, stop_flag, checksum])
                 else:
                     ser.write([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum])
                 # print(bytearray([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum]))
@@ -150,22 +125,22 @@ def opencv4():
     cv2.createTrackbar("blur", "img_contourBox", 5, 15, onChange)
     cv2.createTrackbar("g_scale", "img_contourBox", 0, 255, onChange)
 
-    cv2.setTrackbarPos("h_min", "img_contourBox", 7)
-    cv2.setTrackbarPos("h_max", "img_contourBox", 30)
-    cv2.setTrackbarPos("s_min", "img_contourBox", 20)
-    cv2.setTrackbarPos("s_max", "img_contourBox", 140)
-    cv2.setTrackbarPos("v_min", "img_contourBox", 190)
-    cv2.setTrackbarPos("v_max", "img_contourBox", 250)
+    cv2.setTrackbarPos("h_min", "img_contourBox", 169)
+    cv2.setTrackbarPos("h_max", "img_contourBox", 179)
+    cv2.setTrackbarPos("s_min", "img_contourBox", 109)
+    cv2.setTrackbarPos("s_max", "img_contourBox", 255)
+    cv2.setTrackbarPos("v_min", "img_contourBox", 0)
+    cv2.setTrackbarPos("v_max", "img_contourBox", 255)
     cv2.setTrackbarPos("blur", "img_contourBox", 9)
-    cv2.setTrackbarPos("g_scale", "img_contourBox", 100)
+    cv2.setTrackbarPos("g_scale", "img_contourBox", 27)
 
     while cv2.waitKey(33) != ord('q'):
         ret, frame = capture.read()
         # cv2.imshow("VideoFrame", frame)
         height, width, channel = frame.shape
 
-        low = [7, 20, 190]
-        high = [30, 140, 250]
+        low = [169, 109, 0]
+        high = [179, 255, 255]
         low[0] = cv2.getTrackbarPos("h_min", "img_contourBox")
         high[0] = cv2.getTrackbarPos("h_max", "img_contourBox")
         low[1] = cv2.getTrackbarPos("s_min", "img_contourBox")
@@ -179,26 +154,26 @@ def opencv4():
         cv2.imshow("img_masked", img_masked)
 
         img_blur = Blurring(img_masked, blur)
-        # cv2.imshow('img_blur', img_blur)
+        cv2.imshow('img_blur', img_blur)
 
         img_binary = Grayscale(img_blur, g_scale)
         cv2.imshow('img_binary', img_binary)
 
         contours, img_contour = draw_Contours(img_binary, height, width, channel)
-        # cv2.imshow('contours', img_contour)
+        cv2.imshow('contours', img_contour)
 
         img_contourBox, angle, cart_size = draw_ContourBox(contours, 300, 3, frame)
         cv2.imshow('img_contourBox', img_contourBox)
 
         if cv2.waitKey(33) == ord('r'):
-            cv2.setTrackbarPos("h_min", "img_contourBox", 7)
-            cv2.setTrackbarPos("h_max", "img_contourBox", 30)
-            cv2.setTrackbarPos("s_min", "img_contourBox", 20)
-            cv2.setTrackbarPos("s_max", "img_contourBox", 140)
-            cv2.setTrackbarPos("v_min", "img_contourBox", 190)
-            cv2.setTrackbarPos("v_max", "img_contourBox", 250)
+            cv2.setTrackbarPos("h_min", "img_contourBox", 169)
+            cv2.setTrackbarPos("h_max", "img_contourBox", 179)
+            cv2.setTrackbarPos("s_min", "img_contourBox", 109)
+            cv2.setTrackbarPos("s_max", "img_contourBox", 255)
+            cv2.setTrackbarPos("v_min", "img_contourBox", 0)
+            cv2.setTrackbarPos("v_max", "img_contourBox", 255)
             cv2.setTrackbarPos("blur", "img_contourBox", 9)
-            cv2.setTrackbarPos("g_scale", "img_contourBox", 100)
+            cv2.setTrackbarPos("g_scale", "img_contourBox", 27)
 
     capture.release()
     cv2.destroyAllWindows()
@@ -209,9 +184,6 @@ def pyqt5():
     ui_manager = uic.loadUiType("./ui_workspace/manager.ui")[0]
     ui_status = uic.loadUiType("./ui_workspace/status.ui")[0]
     ui_stop = uic.loadUiType("./ui_workspace/stop.ui")[0]
-
-    global level
-    global accumulate
     
     class Window_Home(QMainWindow, ui_home) :
         def __init__(self) :
@@ -275,7 +247,7 @@ def pyqt5():
             
             # 타이머
             self.timer = QTimer(self)
-            self.timer.start(1000)
+            self.timer.start(100)
             self.timer.timeout.connect(self.f_timeout)
 
             # 버튼 이벤트 설정
@@ -481,8 +453,8 @@ if __name__ == "__main__" :
     # win_status = Window_Status()
     # win_stop = Window_Stop()
     # win_home.show()
-    # p1 = threading.Thread(target=opencv4)
-    # p1.start()
+    p1 = threading.Thread(target=opencv4)
+    p1.start()
     p2 = threading.Thread(target=pyqt5)
     p2.start()
     p3 = threading.Thread(target=serial_run)

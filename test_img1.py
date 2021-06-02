@@ -1,7 +1,8 @@
+#!/usr/bin/env python
 from opencv_header import *
 
 if __name__ == "__main__":
-    src = cv2.imread("./images/1.jpg", cv2.IMREAD_COLOR)
+    src = cv2.imread("/home/robit/VS_workspace/capstone/images/1.jpg", cv2.IMREAD_COLOR)
     src = cv2.resize(src, dsize=(640, 480), interpolation=cv2.INTER_AREA)
     height, width, channel = src.shape
     cv2.imshow("src", src)

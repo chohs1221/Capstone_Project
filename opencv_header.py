@@ -51,9 +51,9 @@ def draw_ContourBox(contours, min_width, min_ratio, src):
             dy = box_[0][1]-box_[2][1]
             angle = math.atan2(dy,dx) * 180 / math.pi
             cart_handle = max(rect[1][0], rect[1][1])
-            if cart_handle < 400:
+            if cart_handle < 410:
                 cart_size = 0
-            elif 400 <= cart_handle < 450:
+            elif 410 <= cart_handle:
                 cart_size = 1
             # elif 450 <= cart_handle:
             #     cart_size = 2
