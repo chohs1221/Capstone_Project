@@ -20,7 +20,7 @@ from PyQt5.QtGui import *
 
 
 def audio(num):
-    audio_name = './audios/audio' + str(num) + '.wav'
+    audio_name = '/home/robit/VS_workspace/capstone/audios/audio_' + str(num) + '.wav'
     try:
         threading.Thread(target=playsound, args=(audio_name,), daemon=False).start()
     except:
@@ -60,7 +60,7 @@ def serial_run():
                     if data_pre == 7:
                         accumulate += 1
                         daily += 1
-                    audio(num = (data % 10))
+                    audio(data_pre)
                 
                 if (data // 10) == 0:
                     empty = 0
@@ -84,7 +84,7 @@ def serial_run():
                     sign = 0b10000000
                 # 0xff, 0xff, 부호+각도, 01?, 01?, 012?, 01?, 01234 => 8byte
                 checksum = cart_size + mode + pump + stop_flag
-                if data_pre == 0 or data == 8:
+                if data_pre == 0 or data_pre == 8:
                     ser.write([255, 255, 127, cart_size, mode, pump, stop_flag, checksum])
                 else:
                     ser.write([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum])
@@ -96,7 +96,7 @@ def serial_run():
         else:
             while True:
                 try:
-                    ser = serial.Serial('/dev/ttyUSB0', 9600, timeout = 1)
+                    ser = serial.Serial('/dev/ttyUSB0', 9600, timeout = 0.2)
 
                 except serial.SerialException:
                     continue
@@ -151,19 +151,19 @@ def opencv4():
         g_scale = cv2.getTrackbarPos("g_scale", "img_contourBox")
 
         img_masked = mask(frame, low, high)
-        cv2.imshow("img_masked", img_masked)
+        # cv2.imshow("img_masked", img_masked)
 
         img_blur = Blurring(img_masked, blur)
-        cv2.imshow('img_blur', img_blur)
+        # cv2.imshow('img_blur', img_blur)
 
         img_binary = Grayscale(img_blur, g_scale)
-        cv2.imshow('img_binary', img_binary)
+        # cv2.imshow('img_binary', img_binary)
 
         contours, img_contour = draw_Contours(img_binary, height, width, channel)
-        cv2.imshow('contours', img_contour)
+        # cv2.imshow('contours', img_contour)
 
         img_contourBox, angle, cart_size = draw_ContourBox(contours, 300, 3, frame)
-        cv2.imshow('img_contourBox', img_contourBox)
+        # cv2.imshow('img_contourBox', img_contourBox)
 
         if cv2.waitKey(33) == ord('r'):
             cv2.setTrackbarPos("h_min", "img_contourBox", 169)
@@ -179,11 +179,11 @@ def opencv4():
     cv2.destroyAllWindows()
 
 def pyqt5():
-    ui_home = uic.loadUiType("./ui_workspace/home.ui")[0]
-    ui_start = uic.loadUiType("./ui_workspace/start.ui")[0]
-    ui_manager = uic.loadUiType("./ui_workspace/manager.ui")[0]
-    ui_status = uic.loadUiType("./ui_workspace/status.ui")[0]
-    ui_stop = uic.loadUiType("./ui_workspace/stop.ui")[0]
+    ui_home = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/home.ui")[0]
+    ui_start = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/start.ui")[0]
+    ui_manager = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/manager.ui")[0]
+    ui_status = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/status.ui")[0]
+    ui_stop = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/stop.ui")[0]
     
     class Window_Home(QMainWindow, ui_home) :
         def __init__(self) :
@@ -247,7 +247,7 @@ def pyqt5():
             
             # 타이머
             self.timer = QTimer(self)
-            self.timer.start(100)
+            self.timer.start(300)
             self.timer.timeout.connect(self.f_timeout)
 
             # 버튼 이벤트 설정
@@ -262,7 +262,7 @@ def pyqt5():
         def f_timeout(self):
             global data
             try:
-                img = QPixmap("./images/img{}.png".format(data))
+                img = QPixmap("/home/robit/VS_workspace/capstone/images/img{}.png".format(data%10))
                 img = img.scaled(1020,550)
                 self.q_lb_img.setPixmap(QPixmap(img))
             except:
@@ -351,7 +351,7 @@ def pyqt5():
 
             # 타이머
             self.timer = QTimer(self)
-            self.timer.start(1000)
+            self.timer.start(300)
             self.timer.timeout.connect(self.f_timeout)
         
         def f_btn_home(self) :
@@ -384,11 +384,11 @@ def pyqt5():
             global daily
 
             if empty == 0:
-                img = QPixmap("./images/empty_green.png")
+                img = QPixmap("/home/robit/VS_workspace/capstone/images/empty_red.png")
                 img = img.scaled(330,200)
                 self.q_lb_level.setPixmap(QPixmap(img))
             elif empty == 1:
-                img = QPixmap("./images/empty_red.png")
+                img = QPixmap("/home/robit/VS_workspace/capstone/images/empty_green.png")
                 img = img.scaled(330,200)
                 self.q_lb_level.setPixmap(QPixmap(img))
 
@@ -399,7 +399,7 @@ def pyqt5():
         def __init__(self) :
             super().__init__()
             self.setupUi(self)
-            img = QPixmap("./images/imgstop.png")
+            img = QPixmap("/home/robit/VS_workspace/capstone/images/imgstop.png")
             img = img.scaled(1000, 460)
             self.q_lb_stop.setPixmap(QPixmap(img))
             # self.setWindowTitle('Stop')
@@ -439,7 +439,7 @@ if __name__ == "__main__" :
     stop_flag = 1
 
     # read
-    data = 0
+    data = 8
     empty = 0
 
     daily = 0    

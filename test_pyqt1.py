@@ -5,11 +5,11 @@ from PyQt5 import uic
 from PyQt5.QtGui import *
 
 #UI파일 연결
-ui_home = uic.loadUiType("./ui_workspace/home.ui")[0]
-ui_start = uic.loadUiType("./ui_workspace/start.ui")[0]
-ui_manager = uic.loadUiType("./ui_workspace/manager.ui")[0]
-ui_status = uic.loadUiType("./ui_workspace/status.ui")[0]
-ui_stop = uic.loadUiType("./ui_workspace/stop.ui")[0]
+ui_home = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/home.ui")[0]
+ui_start = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/start.ui")[0]
+ui_manager = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/manager.ui")[0]
+ui_status = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/status.ui")[0]
+ui_stop = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/stop.ui")[0]
 
 #화면을 띄우는데 사용되는 Class 선언
 class Window_Home(QMainWindow, ui_home) :
