@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="img_btn">
+    <file>img_stop.jpg</file>
+    <file>img_home.jpg</file>
+    <file>img_logoA.jpg</file>
+    <file>img_logoB.jpg</file>
+    <file>img_manager.jpg</file>
+    <file>img_start.jpg</file>
+    <file>img_stop.jpg</file>
+  </qresource>
+</RCC>

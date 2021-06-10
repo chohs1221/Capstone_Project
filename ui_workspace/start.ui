@@ -22,12 +22,12 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1020</width>
-      <height>550</height>
+      <width>1024</width>
+      <height>600</height>
      </rect>
     </property>
     <property name="cursor">
-     <cursorShape>BlankCursor</cursorShape>
+     <cursorShape>ArrowCursor</cursorShape>
     </property>
     <property name="text">
      <string/>
@@ -43,13 +43,13 @@
      </rect>
     </property>
     <property name="cursor">
-     <cursorShape>BlankCursor</cursorShape>
+     <cursorShape>ArrowCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true"/>
+     <string notr="true">border-image: url(:/img_btn/img_home.jpg);</string>
     </property>
     <property name="text">
-     <string>Home</string>
+     <string/>
     </property>
    </widget>
   </widget>
@@ -59,12 +59,14 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

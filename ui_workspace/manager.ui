@@ -22,22 +22,25 @@
      <rect>
       <x>40</x>
       <y>30</y>
-      <width>120</width>
-      <height>60</height>
+      <width>100</width>
+      <height>50</height>
      </rect>
     </property>
     <property name="cursor">
      <cursorShape>BlankCursor</cursorShape>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/img_btn/img_home.jpg);</string>
+    </property>
     <property name="text">
-     <string>Home</string>
+     <string/>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>70</y>
+      <x>90</x>
+      <y>120</y>
       <width>241</width>
       <height>351</height>
      </rect>
@@ -46,7 +49,7 @@
      <cursorShape>BlankCursor</cursorShape>
     </property>
     <property name="title">
-     <string>Select Pressure</string>
+     <string>수압 설정</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -64,7 +67,7 @@
       <cursorShape>BlankCursor</cursorShape>
      </property>
      <property name="text">
-      <string>Pressure Level1</string>
+      <string>1단계</string>
      </property>
     </widget>
     <widget class="QRadioButton" name="q_rad_Level2">
@@ -80,7 +83,7 @@
       <cursorShape>BlankCursor</cursorShape>
      </property>
      <property name="text">
-      <string>Pressure Level2</string>
+      <string>2단계</string>
      </property>
     </widget>
     <widget class="QRadioButton" name="q_rad_Level3">
@@ -96,7 +99,7 @@
       <cursorShape>BlankCursor</cursorShape>
      </property>
      <property name="text">
-      <string>Pressure Level3</string>
+      <string>3단계</string>
      </property>
     </widget>
     <widget class="QCheckBox" name="q_chkb_washonly">
@@ -112,25 +115,73 @@
       <cursorShape>BlankCursor</cursorShape>
      </property>
      <property name="text">
-      <string>Wash Only</string>
+      <string>닦기 전용</string>
      </property>
     </widget>
    </widget>
    <widget class="QPushButton" name="q_btn_stop">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>450</y>
-      <width>1000</width>
-      <height>100</height>
+      <x>670</x>
+      <y>260</y>
+      <width>330</width>
+      <height>210</height>
      </rect>
     </property>
     <property name="cursor">
      <cursorShape>BlankCursor</cursorShape>
     </property>
-    <property name="text">
-     <string>STOP</string>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/img_btn/img_stop.jpg);</string>
     </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_4">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>120</y>
+      <width>241</width>
+      <height>351</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>BlankCursor</cursorShape>
+    </property>
+    <property name="title">
+     <string>위치 조절</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <widget class="QPushButton" name="q_btn_up">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>60</y>
+       <width>100</width>
+       <height>100</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="q_btn_down">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>200</y>
+       <width>100</width>
+       <height>100</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -139,12 +190,14 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

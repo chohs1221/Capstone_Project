@@ -1,28 +1,77 @@
 #!/usr/bin/env python
 from opencv_header import *
 
+def onChange(pos):
+    pass
+
 if __name__ == "__main__":
-    src = cv2.imread("/home/robit/VS_workspace/capstone/images/1.jpg", cv2.IMREAD_COLOR)
+    # capture = cv2.VideoCapture(-1)
+    # capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    # capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    src = cv2.imread("./images/4.jpg", cv2.IMREAD_COLOR)
+    # src = cv2.imread("/home/robit/VS_workspace/capstone/images/1.jpg", cv2.IMREAD_COLOR)
     src = cv2.resize(src, dsize=(640, 480), interpolation=cv2.INTER_AREA)
-    height, width, channel = src.shape
-    cv2.imshow("src", src)
 
-    low = [7, 20, 160]
-    high = [30, 140, 250]
-    img_masked = mask(src, low, high)
-    cv2.imshow("img_masked", img_masked)
+    cv2.namedWindow("img_contourBox")
 
-    img_blur = Blurring(img_masked, 9)
-    cv2.imshow('img_blur', img_blur)
+    cv2.createTrackbar("h_min", "img_contourBox", 0, 179, onChange)
+    cv2.createTrackbar("h_max", "img_contourBox", 0, 179, onChange)
+    cv2.createTrackbar("s_min", "img_contourBox", 0, 255, onChange)
+    cv2.createTrackbar("s_max", "img_contourBox", 0, 255, onChange)
+    cv2.createTrackbar("v_min", "img_contourBox", 0, 255, onChange)
+    cv2.createTrackbar("v_max", "img_contourBox", 0, 255, onChange)
+    cv2.createTrackbar("blur", "img_contourBox", 5, 15, onChange)
+    cv2.createTrackbar("g_scale", "img_contourBox", 0, 255, onChange)
 
-    img_binary = Grayscale(img_blur, 100)
-    cv2.imshow('img_binary', img_binary)
+    cv2.setTrackbarPos("h_min", "img_contourBox", 169)
+    cv2.setTrackbarPos("h_max", "img_contourBox", 179)
+    cv2.setTrackbarPos("s_min", "img_contourBox", 109)
+    cv2.setTrackbarPos("s_max", "img_contourBox", 255)
+    cv2.setTrackbarPos("v_min", "img_contourBox", 0)
+    cv2.setTrackbarPos("v_max", "img_contourBox", 255)
+    cv2.setTrackbarPos("blur", "img_contourBox", 9)
+    cv2.setTrackbarPos("g_scale", "img_contourBox", 27)
 
-    contours, img_contour = draw_Contours(img_binary, height, width, channel)
-    cv2.imshow('contours', img_contour)
+    while cv2.waitKey(33) != ord('q'):
+        # ret, frame = capture.read()
+        # cv2.imshow("VideoFrame", frame)
+        height, width, channel = src.shape
 
-    img_contourBox, angle, cart_size = draw_ContourBox(contours, 300, 3, src)
-    cv2.imshow('img_contourBox', img_contourBox)
+        low = [169, 109, 0]
+        high = [179, 255, 255]
+        low[0] = cv2.getTrackbarPos("h_min", "img_contourBox")
+        high[0] = cv2.getTrackbarPos("h_max", "img_contourBox")
+        low[1] = cv2.getTrackbarPos("s_min", "img_contourBox")
+        high[1] = cv2.getTrackbarPos("s_max", "img_contourBox")
+        low[2] = cv2.getTrackbarPos("v_min", "img_contourBox")
+        high[2] = cv2.getTrackbarPos("v_max", "img_contourBox")
+        blur = cv2.getTrackbarPos("blur", "img_contourBox")
+        g_scale = cv2.getTrackbarPos("g_scale", "img_contourBox")
 
-    cv2.waitKey()
+        img_masked = mask(src, low, high)
+        cv2.imshow("img_masked", img_masked)
+
+        img_blur = Blurring(img_masked, blur)
+        cv2.imshow('img_blur', img_blur)
+
+        img_binary = Grayscale(img_blur, g_scale)
+        cv2.imshow('img_binary', img_binary)
+
+        contours, img_contour = draw_Contours(img_binary, height, width, channel)
+        cv2.imshow('contours', img_contour)
+
+        img_contourBox, angle, cart_size = draw_ContourBox(contours, 300, 3, src)
+        cv2.imshow('img_contourBox', img_contourBox)
+
+        if cv2.waitKey(33) == ord('r'):
+            cv2.setTrackbarPos("h_min", "img_contourBox", 169)
+            cv2.setTrackbarPos("h_max", "img_contourBox", 179)
+            cv2.setTrackbarPos("s_min", "img_contourBox", 109)
+            cv2.setTrackbarPos("s_max", "img_contourBox", 255)
+            cv2.setTrackbarPos("v_min", "img_contourBox", 0)
+            cv2.setTrackbarPos("v_max", "img_contourBox", 255)
+            cv2.setTrackbarPos("blur", "img_contourBox", 9)
+            cv2.setTrackbarPos("g_scale", "img_contourBox", 27)
+
+    capture.release()
     cv2.destroyAllWindows()

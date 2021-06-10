@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5 import uic
 from PyQt5.QtGui import *
-# from ui_workspace import resource_rc
+import resource_rc
 
 
 def audio(num):
@@ -38,6 +38,7 @@ def serial_run():
     global accumulate
     # write
     global angle
+    global updown
     global cart_size
     global mode
     global pump
@@ -85,9 +86,9 @@ def serial_run():
                 # 0xff, 0xff, 부호+각도, 01?, 01?, 012?, 01?, 01234 => 8byte
                 checksum = cart_size + mode + pump + stop_flag
                 if data_pre == 0 or data_pre == 8:
-                    ser.write([255, 255, 127, cart_size, mode, pump, stop_flag, checksum])
+                    ser.write([255, 255, 127, updown, cart_size, mode, pump, stop_flag, checksum])
                 else:
-                    ser.write([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum])
+                    ser.write([255, 255, (sign+abs(round(angle))), updown, cart_size, mode, pump, stop_flag, checksum])
                 # print(bytearray([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum]))
             except:
                 print("ser.write() error!!")
@@ -179,11 +180,16 @@ def opencv4():
     cv2.destroyAllWindows()
 
 def pyqt5():
-    ui_home = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/home.ui")[0]
-    ui_start = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/start.ui")[0]
-    ui_manager = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/manager.ui")[0]
-    ui_status = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/status.ui")[0]
-    ui_stop = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/stop.ui")[0]
+    ui_home = uic.loadUiType("./ui_workspace/home.ui")[0]
+    ui_start = uic.loadUiType("./ui_workspace/start.ui")[0]
+    ui_manager = uic.loadUiType("./ui_workspace/manager.ui")[0]
+    # ui_status = uic.loadUiType("./ui_workspace/status.ui")[0]
+    ui_stop = uic.loadUiType("./ui_workspace/stop.ui")[0]
+    # ui_home = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/home.ui")[0]
+    # ui_start = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/start.ui")[0]
+    # ui_manager = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/manager.ui")[0]
+    # # ui_status = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/status.ui")[0]
+    # ui_stop = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/stop.ui")[0]
     
     class Window_Home(QMainWindow, ui_home) :
         def __init__(self) :
@@ -197,12 +203,24 @@ def pyqt5():
             # qr.moveCenter(cp)
             # self.move(qr.topLeft())
             self.showFullScreen()
-            
+
+            # 텍스트 출력
+            self.q_lb_daily.setText("{}".format(daily))
+            self.q_lb_accumulate.setText("{}".format(accumulate))
+
             # 버튼 이벤트 설정
             self.q_btn_start.clicked.connect(self.f_btn_start)
             self.q_btn_manager.clicked.connect(self.f_btn_manager)
-            self.q_btn_status.clicked.connect(self.f_btn_status)
+            # self.q_btn_status.clicked.connect(self.f_btn_status)
             self.q_btn_stop.clicked.connect(self.f_btn_stop)
+            
+            self.q_btn_resetD.clicked.connect(self.f_btn_resetD)
+            self.q_btn_resetA.clicked.connect(self.f_btn_resetA)
+
+            # 타이머
+            self.timer = QTimer(self)
+            self.timer.start(300)
+            self.timer.timeout.connect(self.f_timeout)
         
         
         def f_btn_start(self) :
@@ -219,12 +237,43 @@ def pyqt5():
             win_manager.show()
             win_manager.showFullScreen()
 
+        '''
         def f_btn_status(self) :
             print("Status Mode ")
             self.close()
             win_status.show()
             win_status.showFullScreen()
+        '''
         
+        def f_btn_resetD(self) :
+            global daily
+            daily = 0
+            self.q_lb_daily.setText("{}".format(daily))
+            
+        def f_btn_resetA(self) :
+            global accumulate
+            accumulate = 0
+            self.q_lb_accumulate.setText("{}".format(accumulate))
+
+        def f_timeout(self):
+            global empty
+            global accumulate
+            global daily
+
+            if empty == 0:
+                img = QPixmap("./images/empty_red.png")
+                # img = QPixmap("/home/robit/VS_workspace/capstone/images/empty_red.png")
+                img = img.scaled(330,200)
+                self.q_lb_level.setPixmap(QPixmap(img))
+            elif empty == 1:
+                img = QPixmap("./images/empty_green.png")
+                # img = QPixmap("/home/robit/VS_workspace/capstone/images/empty_green.png")
+                img = img.scaled(330,200)
+                self.q_lb_level.setPixmap(QPixmap(img))
+
+            self.q_lb_daily.setText("{}".format(daily))
+            self.q_lb_accumulate.setText("{}".format(accumulate))
+
         def f_btn_stop(self) :
             global stop_flag
             stop_flag = 1
@@ -245,6 +294,7 @@ def pyqt5():
             # qr.moveCenter(cp)
             # self.move(qr.topLeft())
             
+            
             # 타이머
             self.timer = QTimer(self)
             self.timer.start(300)
@@ -262,8 +312,9 @@ def pyqt5():
         def f_timeout(self):
             global data
             try:
-                img = QPixmap("/home/robit/VS_workspace/capstone/images/img{}.png".format(data%10))
-                img = img.scaled(1020,550)
+                img = QPixmap("./images/img{}.jpg".format(data%10))
+                # img = QPixmap("/home/robit/VS_workspace/capstone/images/img{}.jpg".format(data%10))
+                img = img.scaled(1024, 600)
                 self.q_lb_img.setPixmap(QPixmap(img))
             except:
                 pass
@@ -290,6 +341,9 @@ def pyqt5():
             self.q_rad_Level1.clicked.connect(self.f_gBox_pressure)
             self.q_rad_Level2.clicked.connect(self.f_gBox_pressure)
             self.q_rad_Level3.clicked.connect(self.f_gBox_pressure)
+
+            self.q_btn_up.clicked.connect(self.f_btn_up)
+            self.q_btn_down.clicked.connect(self.f_btn_down)
         
         def f_btn_home(self) :
             print("home")
@@ -318,6 +372,16 @@ def pyqt5():
                 pump = 2
                 print("level 3")
         
+        def f_btn_up(self) :
+            global updown
+            print("up")
+            updown += 1
+
+        def f_btn_down(self) :
+            global updown
+            print("down")
+            updown -= 1
+
         def f_btn_stop(self) :
             global stop_flag
             stop_flag = 1
@@ -326,6 +390,7 @@ def pyqt5():
             win_stop.show()
             win_stop.showFullScreen()
 
+    '''
     class Window_Status(QMainWindow, ui_status) :
         def __init__(self) :
             super().__init__()
@@ -394,12 +459,13 @@ def pyqt5():
 
             self.q_lb_daily.setText("{}".format(daily))
             self.q_lb_accumulate.setText("{}".format(accumulate))
-
+    '''
     class Window_Stop(QMainWindow, ui_stop) :
         def __init__(self) :
             super().__init__()
             self.setupUi(self)
-            img = QPixmap("/home/robit/VS_workspace/capstone/images/imgstop.png")
+            img = QPixmap("./images/img8.jpg")
+            # img = QPixmap("/home/robit/VS_workspace/capstone/images/img8.jpg")
             img = img.scaled(1000, 460)
             self.q_lb_stop.setPixmap(QPixmap(img))
             # self.setWindowTitle('Stop')
@@ -424,7 +490,7 @@ def pyqt5():
     win_home = Window_Home()
     win_start = Window_Start()
     win_manager = Window_Manager()
-    win_status = Window_Status()
+    #win_status = Window_Status()
     win_stop = Window_Stop()
     win_home.show()
     # win_home.showFullScreen()
@@ -436,6 +502,7 @@ if __name__ == "__main__" :
     cart_size = 0
     mode = 0
     pump = 0
+    updown = 64
     stop_flag = 1
 
     # read
@@ -453,8 +520,8 @@ if __name__ == "__main__" :
     # win_status = Window_Status()
     # win_stop = Window_Stop()
     # win_home.show()
-    p1 = threading.Thread(target=opencv4)
-    p1.start()
+    # p1 = threading.Thread(target=opencv4)
+    # p1.start()
     p2 = threading.Thread(target=pyqt5)
     p2.start()
     p3 = threading.Thread(target=serial_run)
