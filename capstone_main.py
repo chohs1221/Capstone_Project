@@ -524,5 +524,5 @@ if __name__ == "__main__" :
     # p1.start()
     p2 = threading.Thread(target=pyqt5)
     p2.start()
-    p3 = threading.Thread(target=serial_run)
-    p3.start()
+    # p3 = threading.Thread(target=serial_run)
+    # p3.start()

@@ -16,6 +16,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(0, 0, 0);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="q_btn_home">
     <property name="geometry">
@@ -47,6 +50,10 @@
     </property>
     <property name="cursor">
      <cursorShape>BlankCursor</cursorShape>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 15pt &quot;Arial&quot;;
+color: white;</string>
     </property>
     <property name="title">
      <string>수압 설정</string>
@@ -150,6 +157,10 @@
     <property name="cursor">
      <cursorShape>BlankCursor</cursorShape>
     </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 15pt &quot;Arial&quot;;
+color: white;</string>
+    </property>
     <property name="title">
      <string>위치 조절</string>
     </property>
@@ -165,6 +176,9 @@
        <height>100</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/img_btn/img_up.jpg);</string>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -178,11 +192,20 @@
        <height>100</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/img_btn/img_down.jpg);</string>
+     </property>
      <property name="text">
       <string/>
      </property>
     </widget>
+    <zorder>q_btn_down</zorder>
+    <zorder>q_btn_up</zorder>
    </widget>
+   <zorder>groupBox_4</zorder>
+   <zorder>q_btn_home</zorder>
+   <zorder>groupBox_3</zorder>
+   <zorder>q_btn_stop</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
