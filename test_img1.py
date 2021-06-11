@@ -8,7 +8,7 @@ if __name__ == "__main__":
     # capture = cv2.VideoCapture(-1)
     # capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     # capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-    src = cv2.imread("./images/4.jpg", cv2.IMREAD_COLOR)
+    src = cv2.imread("./2.jpg", cv2.IMREAD_COLOR)
     # src = cv2.imread("/home/robit/VS_workspace/capstone/images/1.jpg", cv2.IMREAD_COLOR)
     src = cv2.resize(src, dsize=(640, 480), interpolation=cv2.INTER_AREA)
 

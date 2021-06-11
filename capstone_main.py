@@ -86,9 +86,9 @@ def serial_run():
                 # 0xff, 0xff, 부호+각도, 01?, 01?, 012?, 01?, 01234 => 8byte
                 checksum = cart_size + mode + pump + stop_flag
                 if data_pre == 0 or data_pre == 8:
-                    ser.write([255, 255, 127, cart_size, mode, pump, stop_flag, checksum])
+                    ser.write([255, 255, 127, updown, cart_size, mode, pump, stop_flag, checksum])
                 else:
-                    ser.write([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum])
+                    ser.write([255, 255, (sign+abs(round(angle))), updown, cart_size, mode, pump, stop_flag, checksum])
                 # print(bytearray([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum]))
             except:
                 print("ser.write() error!!")
@@ -128,19 +128,19 @@ def opencv4():
 
     cv2.setTrackbarPos("h_min", "img_contourBox", 169)
     cv2.setTrackbarPos("h_max", "img_contourBox", 179)
-    cv2.setTrackbarPos("s_min", "img_contourBox", 109)
+    cv2.setTrackbarPos("s_min", "img_contourBox", 50)
     cv2.setTrackbarPos("s_max", "img_contourBox", 255)
     cv2.setTrackbarPos("v_min", "img_contourBox", 0)
     cv2.setTrackbarPos("v_max", "img_contourBox", 255)
-    cv2.setTrackbarPos("blur", "img_contourBox", 3)
-    cv2.setTrackbarPos("g_scale", "img_contourBox", 15)
+    cv2.setTrackbarPos("blur", "img_contourBox", 9)
+    cv2.setTrackbarPos("g_scale", "img_contourBox", 3)
 
     while cv2.waitKey(33) != ord('q'):
         ret, frame = capture.read()
         # cv2.imshow("VideoFrame", frame)
         height, width, channel = frame.shape
 
-        low = [169, 80, 0]
+        low = [169, 50, 0]
         high = [179, 255, 255]
         low[0] = cv2.getTrackbarPos("h_min", "img_contourBox")
         high[0] = cv2.getTrackbarPos("h_max", "img_contourBox")
@@ -163,33 +163,33 @@ def opencv4():
         contours, img_contour = draw_Contours(img_binary, height, width, channel)
         # cv2.imshow('contours', img_contour)
 
-        img_contourBox, angle, cart_size = draw_ContourBox(contours, 400, 3, frame)
-        cv2.imshow('img_contourBox', img_contourBox)
+        img_contourBox, angle, cart_size = draw_ContourBox(contours, 300, 3, frame)
+        # cv2.imshow('img_contourBox', img_contourBox)
 
         if cv2.waitKey(33) == ord('r'):
             cv2.setTrackbarPos("h_min", "img_contourBox", 169)
             cv2.setTrackbarPos("h_max", "img_contourBox", 179)
-            cv2.setTrackbarPos("s_min", "img_contourBox", 80)
+            cv2.setTrackbarPos("s_min", "img_contourBox", 50)
             cv2.setTrackbarPos("s_max", "img_contourBox", 255)
             cv2.setTrackbarPos("v_min", "img_contourBox", 0)
             cv2.setTrackbarPos("v_max", "img_contourBox", 255)
-            cv2.setTrackbarPos("blur", "img_contourBox", 3)
-            cv2.setTrackbarPos("g_scale", "img_contourBox", 15)
+            cv2.setTrackbarPos("blur", "img_contourBox", 9)
+            cv2.setTrackbarPos("g_scale", "img_contourBox", 3)
 
     capture.release()
     cv2.destroyAllWindows()
 
 def pyqt5():
-    # ui_home = uic.loadUiType("./ui_workspace/home.ui")[0]
-    # ui_start = uic.loadUiType("./ui_workspace/start.ui")[0]
-    # ui_manager = uic.loadUiType("./ui_workspace/manager.ui")[0]
-    # # ui_status = uic.loadUiType("./ui_workspace/status.ui")[0]
-    # ui_stop = uic.loadUiType("./ui_workspace/stop.ui")[0]
-    ui_home = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/home.ui")[0]
-    ui_start = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/start.ui")[0]
-    ui_manager = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/manager.ui")[0]
-    # ui_status = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/status.ui")[0]
-    ui_stop = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/stop.ui")[0]
+    ui_home = uic.loadUiType("./ui_workspace/home.ui")[0]
+    ui_start = uic.loadUiType("./ui_workspace/start.ui")[0]
+    ui_manager = uic.loadUiType("./ui_workspace/manager.ui")[0]
+    # ui_status = uic.loadUiType("./ui_workspace/status.ui")[0]
+    ui_stop = uic.loadUiType("./ui_workspace/stop.ui")[0]
+    # ui_home = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/home.ui")[0]
+    # ui_start = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/start.ui")[0]
+    # ui_manager = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/manager.ui")[0]
+    # # ui_status = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/status.ui")[0]
+    # ui_stop = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/stop.ui")[0]
     
     class Window_Home(QMainWindow, ui_home) :
         def __init__(self) :
@@ -261,13 +261,13 @@ def pyqt5():
             global daily
 
             if empty == 0:
-                # img = QPixmap("./images/empty_red.png")
-                img = QPixmap("/home/robit/VS_workspace/capstone/images/empty_red.png")
+                img = QPixmap("./images/empty_red.png")
+                # img = QPixmap("/home/robit/VS_workspace/capstone/images/empty_red.png")
                 img = img.scaled(330,200)
                 self.q_lb_level.setPixmap(QPixmap(img))
             elif empty == 1:
-                # img = QPixmap("./images/empty_green.png")
-                img = QPixmap("/home/robit/VS_workspace/capstone/images/empty_green.png")
+                img = QPixmap("./images/empty_green.png")
+                # img = QPixmap("/home/robit/VS_workspace/capstone/images/empty_green.png")
                 img = img.scaled(330,200)
                 self.q_lb_level.setPixmap(QPixmap(img))
 
@@ -312,8 +312,8 @@ def pyqt5():
         def f_timeout(self):
             global data
             try:
-                # img = QPixmap("./images/img{}.jpg".format(data%10))
-                img = QPixmap("/home/robit/VS_workspace/capstone/images/img{}.jpg".format(data%10))
+                img = QPixmap("./images/img{}.jpg".format(data%10))
+                # img = QPixmap("/home/robit/VS_workspace/capstone/images/img{}.jpg".format(data%10))
                 img = img.scaled(1024, 600)
                 self.q_lb_img.setPixmap(QPixmap(img))
             except:
@@ -464,8 +464,8 @@ def pyqt5():
         def __init__(self) :
             super().__init__()
             self.setupUi(self)
-            # img = QPixmap("./images/img8.jpg")
-            img = QPixmap("/home/robit/VS_workspace/capstone/images/img8.jpg")
+            img = QPixmap("./images/img8.jpg")
+            # img = QPixmap("/home/robit/VS_workspace/capstone/images/img8.jpg")
             img = img.scaled(1000, 460)
             self.q_lb_stop.setPixmap(QPixmap(img))
             # self.setWindowTitle('Stop')
@@ -520,9 +520,9 @@ if __name__ == "__main__" :
     # win_status = Window_Status()
     # win_stop = Window_Stop()
     # win_home.show()
-    p1 = threading.Thread(target=opencv4)
-    p1.start()
+    # p1 = threading.Thread(target=opencv4)
+    # p1.start()
     p2 = threading.Thread(target=pyqt5)
     p2.start()
-    p3 = threading.Thread(target=serial_run)
-    p3.start()
+    # p3 = threading.Thread(target=serial_run)
+    # p3.start()
