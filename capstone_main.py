@@ -97,7 +97,7 @@ def serial_run():
         else:
             while True:
                 try:
-                    ser = serial.Serial('/dev/ttyUSB0', 9600, timeout = 0)
+                    ser = serial.Serial('/dev/ttyUSB0', 9600, timeout = 0.2)
 
                 except serial.SerialException:
                     continue
@@ -466,7 +466,7 @@ def pyqt5():
             self.setupUi(self)
             # img = QPixmap("./images/img8.jpg")
             img = QPixmap("/home/robit/VS_workspace/capstone/images/img8.jpg")
-            img = img.scaled(1000, 460)
+            img = img.scaled(1024, 600)
             self.q_lb_stop.setPixmap(QPixmap(img))
             # self.setWindowTitle('Stop')
             
