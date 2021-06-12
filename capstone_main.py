@@ -466,7 +466,7 @@ def pyqt5():
             self.setupUi(self)
             # img = QPixmap("./images/img8.jpg")
             img = QPixmap("/home/robit/VS_workspace/capstone/images/img8.jpg")
-            img = img.scaled(1024, 600)
+            img = img.scaled(1000, 460)
             self.q_lb_stop.setPixmap(QPixmap(img))
             # self.setWindowTitle('Stop')
             
