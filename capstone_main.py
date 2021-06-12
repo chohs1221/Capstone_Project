@@ -97,7 +97,7 @@ def serial_run():
         else:
             while True:
                 try:
-                    ser = serial.Serial('/dev/ttyUSB0', 9600, timeout = 1)
+                    ser = serial.Serial('/dev/ttyUSB0', 9600, timeout = 0)
 
                 except serial.SerialException:
                     continue
