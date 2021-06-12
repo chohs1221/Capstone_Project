@@ -86,9 +86,9 @@ def serial_run():
                 # 0xff, 0xff, 부호+각도, 01?, 01?, 012?, 01?, 01234 => 8byte
                 checksum = cart_size + mode + pump + stop_flag
                 if data_pre == 0 or data_pre == 8:
-                    ser.write([255, 255, 127, updown, cart_size, mode, pump, stop_flag, checksum])
+                    ser.write([255, 255, 127, cart_size, mode, pump, stop_flag, checksum])
                 else:
-                    ser.write([255, 255, (sign+abs(round(angle))), updown, cart_size, mode, pump, stop_flag, checksum])
+                    ser.write([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum])
                 # print(bytearray([255, 255, (sign+abs(round(angle))), cart_size, mode, pump, stop_flag, checksum]))
             except:
                 print("ser.write() error!!")
