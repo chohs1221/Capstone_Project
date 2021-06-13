@@ -51,13 +51,13 @@ def draw_ContourBox(contours, min_width, min_ratio, src):
             dy = box_[0][1]-box_[2][1]
             angle = math.atan2(dy,dx) * 180 / math.pi
             cart_handle = max(rect[1][0], rect[1][1])
-            if cart_handle < 410:
+            if cart_handle < 500:
                 cart_size = 0
-            elif 410 <= cart_handle:
+            elif 500 <= cart_handle:
                 cart_size = 1
             # elif 450 <= cart_handle:
             #     cart_size = 2
-            #print("(x, y) = ({0})\n(width, height) = {1}\n(angle) = {2}".format(rect[0], rect[1], angle))
+            print("(x, y) = ({0})\n(width, height) = {1}\n(angle) = {2}".format(rect[0], rect[1], angle))
             #print(box)
             # print(cart_handle)
 
@@ -65,19 +65,20 @@ def draw_ContourBox(contours, min_width, min_ratio, src):
 
 if __name__ == "__main__":
     src = cv2.imread("/home/robit/VS_workspace/capstone/images/1.jpg", cv2.IMREAD_COLOR)
+    src = cv2.imread("./2.jpg", cv2.IMREAD_COLOR)
     src = cv2.resize(src, dsize=(640, 480), interpolation=cv2.INTER_AREA)
     height, width, channel = src.shape
     cv2.imshow("src", src)
 
-    low = [7, 20, 160]
-    high = [30, 140, 250]
+    low = [169, 50, 0]
+    high = [179, 255, 255]
     img_masked = mask(src, low, high)
     cv2.imshow("img_masked", img_masked)
 
     img_blur = Blurring(img_masked, 9)
     cv2.imshow('img_blur', img_blur)
 
-    img_binary = Grayscale(img_blur, 100)
+    img_binary = Grayscale(img_blur, 3)
     cv2.imshow('img_binary', img_binary)
 
     contours, img_contour = draw_Contours(img_binary, height, width, channel)
