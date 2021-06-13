@@ -164,7 +164,7 @@ def opencv4():
         # cv2.imshow('contours', img_contour)
 
         img_contourBox, angle, cart_size = draw_ContourBox(contours, 300, 3, frame)
-        cv2.imshow('img_contourBox', img_contourBox)
+        # cv2.imshow('img_contourBox', img_contourBox)
 
         if cv2.waitKey(33) == ord('r'):
             cv2.setTrackbarPos("h_min", "img_contourBox", 169)
