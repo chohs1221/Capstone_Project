@@ -18,22 +18,22 @@ cv2.createTrackbar("v_max", "img_contourBox", 0, 255, onChange)
 cv2.createTrackbar("blur", "img_contourBox", 5, 15, onChange)
 cv2.createTrackbar("g_scale", "img_contourBox", 0, 255, onChange)
 
-cv2.setTrackbarPos("h_min", "img_contourBox", 7)
-cv2.setTrackbarPos("h_max", "img_contourBox", 30)
-cv2.setTrackbarPos("s_min", "img_contourBox", 20)
-cv2.setTrackbarPos("s_max", "img_contourBox", 140)
-cv2.setTrackbarPos("v_min", "img_contourBox", 190)
-cv2.setTrackbarPos("v_max", "img_contourBox", 250)
+cv2.setTrackbarPos("h_min", "img_contourBox", 169)
+cv2.setTrackbarPos("h_max", "img_contourBox", 179)
+cv2.setTrackbarPos("s_min", "img_contourBox", 109)
+cv2.setTrackbarPos("s_max", "img_contourBox", 255)
+cv2.setTrackbarPos("v_min", "img_contourBox", 0)
+cv2.setTrackbarPos("v_max", "img_contourBox", 255)
 cv2.setTrackbarPos("blur", "img_contourBox", 9)
-cv2.setTrackbarPos("g_scale", "img_contourBox", 100)
+cv2.setTrackbarPos("g_scale", "img_contourBox", 27)
 
 while cv2.waitKey(33) != ord('q'):
     ret, frame = capture.read()
     cv2.imshow("VideoFrame", frame)
     height, width, channel = frame.shape
 
-    low = [7, 20, 190]
-    high = [30, 140, 250]
+    low = [169, 109, 0]
+    high = [179, 255, 255]
     low[0] = cv2.getTrackbarPos("h_min", "img_contourBox")
     high[0] = cv2.getTrackbarPos("h_max", "img_contourBox")
     low[1] = cv2.getTrackbarPos("s_min", "img_contourBox")
@@ -55,18 +55,18 @@ while cv2.waitKey(33) != ord('q'):
     contours, img_contour = draw_Contours(img_binary, height, width, channel)
     cv2.imshow('contours', img_contour)
 
-    img_contourBox, angle, cart_size = draw_ContourBox(contours, 300, 3, frame)
+    img_contourBox, angle, cart_size = draw_ContourBox(contours, 400, 3, frame)
     cv2.imshow('img_contourBox', img_contourBox)
 
     if cv2.waitKey(33) == ord('r'):
-        cv2.setTrackbarPos("h_min", "img_contourBox", 7)
-        cv2.setTrackbarPos("h_max", "img_contourBox", 30)
-        cv2.setTrackbarPos("s_min", "img_contourBox", 20)
-        cv2.setTrackbarPos("s_max", "img_contourBox", 140)
-        cv2.setTrackbarPos("v_min", "img_contourBox", 190)
-        cv2.setTrackbarPos("v_max", "img_contourBox", 250)
-        cv2.setTrackbarPos("blur", "img_contourBox", 9)
-        cv2.setTrackbarPos("g_scale", "img_contourBox", 100)
+        cv2.setTrackbarPos("h_min", "img_contourBox", 169)
+        cv2.setTrackbarPos("h_max", "img_contourBox", 179)
+        cv2.setTrackbarPos("s_min", "img_contourBox", 80)
+        cv2.setTrackbarPos("s_max", "img_contourBox", 255)
+        cv2.setTrackbarPos("v_min", "img_contourBox", 0)
+        cv2.setTrackbarPos("v_max", "img_contourBox", 255)
+        cv2.setTrackbarPos("blur", "img_contourBox", 3)
+        cv2.setTrackbarPos("g_scale", "img_contourBox", 15)
 
 capture.release()
 cv2.destroyAllWindows()
