@@ -13,7 +13,7 @@ def Grayscale(img, thresh):
     ret, binary = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY)
     binary = cv2.bitwise_not(binary)
     return binary
-
+ 
 # Contour (src, height, width, channel) >> contour img
 def draw_Contours(img, height, width, channel):
     contours, _ = cv2.findContours(

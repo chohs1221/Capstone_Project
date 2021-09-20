@@ -5,16 +5,14 @@ from PyQt5 import uic
 from PyQt5.QtGui import *
 import resource_rc
 
-ui_home = uic.loadUiType("./ui_workspace/home.ui")[0]
-ui_start = uic.loadUiType("./ui_workspace/start.ui")[0]
-ui_manager = uic.loadUiType("./ui_workspace/manager.ui")[0]
-# ui_status = uic.loadUiType("./ui_workspace/status.ui")[0]
-ui_stop = uic.loadUiType("./ui_workspace/stop.ui")[0]
-# ui_home = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/home.ui")[0]
-# ui_start = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/start.ui")[0]
-# ui_manager = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/manager.ui")[0]
-# # ui_status = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/status.ui")[0]
-# ui_stop = uic.loadUiType("/home/robit/VS_workspace/capstone/ui_workspace/stop.ui")[0]
+global path
+path = './'
+# path = '/home/robit/VS_workspace/capstone/'
+ui_home = uic.loadUiType(path + "ui_workspace/home.ui")[0]
+ui_start = uic.loadUiType(path + "ui_workspace/start.ui")[0]
+ui_manager = uic.loadUiType(path + "ui_workspace/manager.ui")[0]
+# ui_status = uic.loadUiType(path + "ui_workspace/status.ui")[0]
+ui_stop = uic.loadUiType(path + "ui_workspace/stop.ui")[0]
 
 class Window_Home(QMainWindow, ui_home) :
     def __init__(self) :
@@ -86,13 +84,11 @@ class Window_Home(QMainWindow, ui_home) :
         global daily
 
         if empty == 0:
-            img = QPixmap("./images/empty_red.png")
-            # img = QPixmap("/home/robit/VS_workspace/capstone/images/empty_red.png")
+            img = QPixmap(path + "images/empty_red.png")
             img = img.scaled(330,200)
             self.q_lb_level.setPixmap(QPixmap(img))
         elif empty == 1:
-            img = QPixmap("./images/empty_green.png")
-            # img = QPixmap("/home/robit/VS_workspace/capstone/images/empty_green.png")
+            img = QPixmap(path + "images/empty_green.png")
             img = img.scaled(330,200)
             self.q_lb_level.setPixmap(QPixmap(img))
 
@@ -137,8 +133,7 @@ class Window_Start(QMainWindow, ui_start) :
     def f_timeout(self):
         global data
         try:
-            img = QPixmap("./images/img{}.jpg".format(data%10))
-            # img = QPixmap("/home/robit/VS_workspace/capstone/images/img{}.jpg".format(data%10))
+            img = QPixmap(path + "images/gui{}.jpg".format(data%10))
             img = img.scaled(1024, 600)
             self.q_lb_img.setPixmap(QPixmap(img))
         except:
@@ -289,9 +284,7 @@ class Window_Stop(QMainWindow, ui_stop) :
     def __init__(self) :
         super().__init__()
         self.setupUi(self)
-        # img = QPixmap("./images/img8.jpg")
-        # img = QPixmap("/home/robit/VS_workspace/capstone/images/img8.jpg")
-        img = QPixmap("./images/img8.jpg")
+        img = QPixmap(path + "images/gui8.jpg")
         img = img.scaled(1000, 460)
         self.q_lb_stop.setPixmap(QPixmap(img))
         # self.setWindowTitle('Stop')
@@ -336,4 +329,4 @@ win_manager = Window_Manager()
 win_stop = Window_Stop()
 win_home.show()
 # win_home.showFullScreen()
-app.exec_()
+app.exec_() 

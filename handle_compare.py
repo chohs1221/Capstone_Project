@@ -1,7 +1,9 @@
 import cv2
 import numpy as np
 
-a = cv2.imread('./q2.jpg')
+path = './'
+# path = '/home/robit/VS_workspace/capstone/'
+a = cv2.imread(path + 'handle_after_binary.jpg')
 dst = cv2.cvtColor(a, cv2.COLOR_BGR2GRAY)
 ret, dst = cv2.threshold(dst, 100, 255, cv2.THRESH_BINARY)
 cv2.imshow("dst", dst)

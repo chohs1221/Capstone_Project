@@ -7,6 +7,7 @@ capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 def onChange(pos):
     pass
 
+
 cv2.namedWindow("img_contourBox")
 
 cv2.createTrackbar("h_min", "img_contourBox", 0, 179, onChange)
@@ -67,6 +68,6 @@ while cv2.waitKey(33) != ord('q'):
         cv2.setTrackbarPos("v_max", "img_contourBox", 255)
         cv2.setTrackbarPos("blur", "img_contourBox", 3)
         cv2.setTrackbarPos("g_scale", "img_contourBox", 15)
-
+ 
 capture.release()
 cv2.destroyAllWindows()
