@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import sys
 import time
 import threading
@@ -18,7 +16,7 @@ from PyQt5 import uic
 from PyQt5.QtGui import *
 import resource_rc
 
-
+# 안내 음성 출력
 def audio(num):
     audio_name = path + 'audios/audio_' + str(num) + '.wav'
     try:
@@ -26,12 +24,14 @@ def audio(num):
     except:
         pass
 
+# 통신용 각도값
 def angle2string(angle):
     if angle >= 0:
         return '+' + str("%05.2f" % (angle))
     elif angle < 0:
         return '-' + str("%05.2f" % (-angle))
 
+# 시리얼 통신
 def serial_run():
     global connection
     global daily
@@ -109,6 +109,7 @@ def serial_run():
 def onChange(pos):
     pass
 
+# 카트 손잡이 크기 및 기울기 검출
 def opencv4():
     global angle, cart_size
     capture = cv2.VideoCapture(-1)
@@ -179,6 +180,7 @@ def opencv4():
     capture.release()
     cv2.destroyAllWindows()
 
+# GUI 구성
 def pyqt5():
     ui_home = uic.loadUiType(path + "ui_workspace/home.ui")[0]
     ui_start = uic.loadUiType(path + "ui_workspace/start.ui")[0]

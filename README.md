@@ -7,7 +7,7 @@ Team. SCCR
 * [Algorithm](https://github.com/chohs1221/Capstone_Project/#Algorithm)
 * [Hardware](https://github.com/chohs1221/Capstone_Project/#Hardware)
 * [Software](https://github.com/chohs1221/Capstone_Project/#Software)
-  * [View Code](https://github.com/chohs1221/Capstone_Project/blob/master/start.py)
+  * [View Code](https://github.com/chohs1221/Capstone_Project/blob/master/run.py)
   * [Cart Handle Detection](https://github.com/chohs1221/Capstone_Project/#1-Cart-Handle-Detection)
   * [GUI](https://github.com/chohs1221/Capstone_Project/#2-GUI)
   * [Serial Port & Protocol](https://github.com/chohs1221/Capstone_Project/#3-Serial-Port-&-Protocol)
