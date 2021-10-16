@@ -1,6 +1,7 @@
 # 2021 Capstone Project
 ### 접촉·비접촉 쇼핑카트 살균, 소독 및 케어 로봇
-Team. SCCR
+Team. SCCR   
+<img src="/img4README/img_software.JPG" width="720px" height="540px"></img><br/>
 ## Contents
 * [Introduction](https://github.com/chohs1221/Capstone_Project/#Introduction)
 * [System Architecture](https://github.com/chohs1221/Capstone_Project/#System-Architecture)
