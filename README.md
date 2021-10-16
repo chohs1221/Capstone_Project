@@ -35,24 +35,24 @@ MCU는 Cortex-M4로 사용하였다. 카메라로 카트 손잡이의 크기와 
 개별소독 모드는 마트 이용객이 직접 카트를 넣어서 사용하는 모드이고 다량소독 모드(Mode1)는 여려 개의 카트를 한 번에 소독하는 모드로 직원이 주로 사용할 수 있도록 하였고, 수동 조작이기 때문에 따로 순서가 없다. Mode0에서는 Automatic System이기 때문에 알고리즘을 구성하였다. 먼저 준비상태에 있는 로봇에 카트를 넣게 되면 앞 가변저항 2개의 센서 값 변화로 진행 사항을 알 수 있는데, 하나의 값만 변하면 더 밀어달라는 신호를 보내주고 두 센서 값이 모두 변해야 손잡이를 놓아달라는 신호를 보내준다. 그리고 손잡이르 놓음과 동시에 카메라로 카트 손잡이의 사이즈와 기울기를 확인한다. 카트의 사이즈에 맞게 상단롤러의 위치를 먼저 맞추고 나서 기울기 값으로 앞 사이드 롤러 속도를 부여한다. 동시에 블로워, 팬 모터, LED, 브러쉬 롤러 등 전체 System이 가동된다. 진행이 되면서 브러쉬 롤러에 장착된 Psd 센서에 값이 들어오면 상단 롤러가 위로 올라가도록 하여 카트의 경사진 면을 브러쉬 롤러가 카트에 닿지 않고 닦을 수 있도록 한다. 그 후 앞 사이드 롤러에서 벗어나 뒤 사이드 롤러에만 잡히게 되면 몇 초의 딜레이 후에 브러쉬 롤러의 회전 방향을 역으로 주어 손잡이의 세척을 더 깔끔히 할 수 있도록 하였다. 그 후 뒤 사이드롤러로 배출이 되면 뒤 가변저항 값도 변하면서 System이 처음 init 값으로 초기화가 된다. init일 때의 로봇은 앞 사이드 롤러, 뒤 사이드 롤러, 블로워, 팬 모터, LED, 브러쉬 롤러 등 전체 System이 꺼지고 상단 롤러만 위로 올라가게 작동한다. 상단 롤러가 limited switch를 누르도록 하여 눌리면 처음 위치로 갈 수 있도록 하였다. 이 모든 진행 사항에서의 sensor 값은 miniPC로 전달되어 LCD에서 UI로 알려주고 음성 스피커로 한 번 더 알려준다.
 
 ## Hardware   
-<img src="/img4README/img_hardware1.jpg" width="720px" height="480px"></img><br/>
-<img src="/img4README/img_hardware2.jpg" width="720px" height="480px"></img><br/>
+<img src="/img4README/img_hardware1.JPG" width="480px" height="360px"></img><br/>
+<img src="/img4README/img_hardware2.JPG" width="480px" height="360px"></img><br/>
 하드웨어는 3D 모델링 툴인 Inventor 프로그램을 사용하여 설계했다. 알루미늄 프로파일로 골조를 제작하였고 알루미늄 상판 위에 아크릴로 케이싱한 디자인이 우측 그림이다. 방수를 고려하여 내부에도 아크릴을 씌웠고, 각각의 모터에도 3D프린팅으로 케이스를 씌웠다.   
 카트를 밀어주는 4개의 사이드 롤러와 카트를 닦아주는 브러쉬 롤러 그리고 브러쉬 롤러의 높이 위치를 결정해주는 상단 롤러로 구성돼 있다.
 
 ## Software   
 ### 1. Cart Handle Detection   
-<img src="/img4README/img_carthandle1.jpg" width="720px" height="480px"></img><br/>
-<img src="/img4README/img_carthandle2.jpg" width="720px" height="120px"></img><br/>
+<img src="/img4README/img_carthandle1.jpg" width="480px" height="320px"></img><br/>
+<img src="/img4README/img_carthandle2.jpg" width="480px" height="120px"></img><br/>
 Usb_Cam을 통해 카트의 손잡이를 인식한다. 인식한 손잡이의 윤곽선을 검출해 카트 손잡이의 길이와 기울기 값을 계산한다. 인식한 길이에 맞게 로봇의 상단 롤러가 내려오게 되고 이에 여러 크기의 카트에 적용할 수 있도록 한다. 또한 손잡이의 좌표 값을 계산해서 얻은 기울기로 robot 제어기에 feedback 역할을 하여 입구 쪽 롤러의 속도를 실시간으로 바꿔줘 카트의 기울어짐을 잡아준다.   
 
 ### 2. GUI   
-<img src="/img4README/img_gui1.jpg" width="360px" height="240px"></img><br/>
-<img src="/img4README/img_gui2.jpg" width="360px" height="240px"></img><br/>
+<img src="/img4README/img_gui1.jpg" width="420px" height="240px"></img><br/>
+<img src="/img4README/img_gui2.jpg" width="420px" height="240px"></img><br/>
 PyQt를 이용하여 UI를 Design 했다. Design은 사용자의 편의성에 가장 중점을 두었고 이를 Touch Screen에서 동작될 수 있도록 하였다. 이 때 Button과 로고는 직접 제작하였다. 사용자는 UI를 이용할 수 있고 그 초기 화면은 위와 같다. 초기 화면에는 크게 시작 Button, 설정 Button, 정지 Button이 있고 로봇의 작동이 완료될 때마다 count를 하여 소독된 카트의 수를 알려주는 일일 누적과 주간 누적이 있다. 또한 수위감지센서를 통해 세척액의 잔량이 얼마인지 알 수 있도록 세척액의 수위를 한 눈에 알아볼 수 있도록 하였다.   
-<img src="/img4README/img_gui3.jpg" width="720px" height="480px"></img><br/>
+<img src="/img4README/img_gui3.JPG" width="600px" height="720px"></img><br/>
 시작 Button을 누르면 총 8가지 Screen과 동시에 음성으로 사용 안내를 받을 수 있다. 알고리즘을 따라 Screen도 바뀌며 음성으로 안내를 해준다.   
-<img src="/img4README/img_gui4.jpg" width="360px" height="240px"></img><br/>
+<img src="/img4README/img_gui4.jpg" width="420px" height="240px"></img><br/>
 설정 Button을 누르면 세척액의 수압 세기와 분사 mode를 선택할 수 있다, 분사 mode에서 닦기 전용은 다량의 카트를 소독할 때 사용하는 것으로, 상단 롤러만 작동하여 Brush로 카트의 상단을 닦아주는 것이다. 또한, 상단 롤러의 위치도 조절할 수 있으며 사용자의 안전을 위해 긴급 정지 Button을 넣어주었다. 정지를 누르면 시스템이 멈추고 다시 시작하기 전까지 작동하지 않는다. 또한 화살표 버튼을 클릭하여 수동으로 상단 롤러의 위치를 조정할 수 있다.   
 
 ### 3. Serial Port & Protocol   
